@@ -56,8 +56,8 @@ const DEMO_USERS: Record<UserRole, User> = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Default to Admin
-  const [user, setUser] = useState<User | null>(DEMO_USERS.admin);
+  // Default to null - User MUST log in to access any dashboard
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem('dreamsrent_auth_user');
