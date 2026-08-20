@@ -29,11 +29,13 @@ import {
   DollarSign,
   FileText
 } from 'lucide-react';
+import { AuthGuard } from '../auth/AuthGuard';
 
 interface DashboardLayoutProps {
   title: string;
   subtitle?: string;
   breadcrumb?: { label: string; href?: string }[];
+  allowedRoles?: ('admin' | 'vendor' | 'driver' | 'customer')[];
   children: React.ReactNode;
 }
 
@@ -41,6 +43,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   title,
   subtitle,
   breadcrumb = [{ label: 'Home', href: '/' }, { label: title }],
+  allowedRoles,
   children
 }) => {
   const pathname = usePathname();
@@ -258,8 +261,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             </div>
           </div>
 
-          {/* Children Slot */}
-          {children}
+          {/* Children Slot (Protected by AuthGuard) */}
+          <AuthGuard allowedRoles={allowedRoles}>
+            {children}
+          </AuthGuard>
 
         </main>
 

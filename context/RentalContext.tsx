@@ -201,6 +201,13 @@ export const RentalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       return updated;
     });
 
+    // Persist to PostgreSQL backend
+    fetch('/api/bookings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newBooking)
+    }).catch(err => console.warn('Sync booking to DB:', err));
+
     return newBooking;
   };
 
@@ -210,6 +217,12 @@ export const RentalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       localStorage.setItem('dreamsrent_bookings', JSON.stringify(updated));
       return updated;
     });
+
+    fetch(`/api/bookings/${bookingId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'Cancelled' })
+    }).catch(err => console.warn('Sync cancel booking to DB:', err));
   };
 
   const updateBookingStatus = (bookingId: string, status: Booking['status']) => {
@@ -218,6 +231,12 @@ export const RentalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       localStorage.setItem('dreamsrent_bookings', JSON.stringify(updated));
       return updated;
     });
+
+    fetch(`/api/bookings/${bookingId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    }).catch(err => console.warn('Sync booking status to DB:', err));
   };
 
   const addVehicle = (newCar: Vehicle) => {
@@ -226,6 +245,12 @@ export const RentalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       localStorage.setItem('dreamsrent_custom_vehicles', JSON.stringify(updated));
       return updated;
     });
+
+    fetch('/api/vehicles', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newCar)
+    }).catch(err => console.warn('Sync add vehicle to DB:', err));
   };
 
   const updateVehicle = (id: string, updated: Partial<Vehicle>) => {
@@ -234,6 +259,12 @@ export const RentalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       localStorage.setItem('dreamsrent_custom_vehicles', JSON.stringify(next));
       return next;
     });
+
+    fetch('/api/vehicles', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, ...updated })
+    }).catch(err => console.warn('Sync update vehicle to DB:', err));
   };
 
   const deleteVehicle = (id: string) => {
