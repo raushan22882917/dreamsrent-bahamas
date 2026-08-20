@@ -57,7 +57,7 @@ const defaultFilters: FilterState = {
   location: 'All',
   transmission: 'All',
   seats: null,
-  maxPrice: 350,
+  maxPrice: 1000,
   selectedFeatures: [],
   searchQuery: ''
 };
@@ -66,25 +66,25 @@ const INITIAL_DEMO_BOOKINGS: Booking[] = [
   {
     id: 'book-101',
     reservationNumber: 'RES-2026-004412',
-    vehicleId: 'car-1',
+    vehicleId: 'mazda-1',
     vehicle: VEHICLES_DATA[0],
-    pickupLocation: 'Nassau Airport (NAS)',
-    returnLocation: 'Nassau Airport (NAS)',
+    pickupLocation: 'Tower Bridge',
+    returnLocation: 'Tower Bridge',
     pickupDate: '2026-08-25',
     pickupTime: '10:00',
     returnDate: '2026-08-29',
     returnTime: '10:00',
     days: 4,
-    dailyRate: 110,
-    rentalSubtotal: 440,
+    dailyRate: 100,
+    rentalSubtotal: 400,
     selectedExtras: [
       { id: 'extra-insurance', name: 'Full Comprehensive Damage Waiver', description: '', price: 25, priceType: 'per_day' }
     ],
     extrasTotal: 100,
-    taxes: 54,
+    taxes: 50,
     depositAmount: 200,
-    totalAmount: 594,
-    amountPaid: 594,
+    totalAmount: 550,
+    amountPaid: 550,
     balanceDue: 0,
     paymentType: 'full',
     paymentMethod: 'card',
@@ -100,36 +100,38 @@ const INITIAL_DEMO_BOOKINGS: Booking[] = [
   },
   {
     id: 'book-102',
-    reservationNumber: 'RES-2026-003891',
-    vehicleId: 'car-5',
-    vehicle: VEHICLES_DATA[4],
-    pickupLocation: 'Paradise Island',
-    returnLocation: 'Paradise Island',
-    pickupDate: '2026-08-10',
+    reservationNumber: 'RES-2026-004388',
+    vehicleId: 'mazda-2',
+    vehicle: VEHICLES_DATA[1],
+    pickupLocation: 'Big Ben',
+    returnLocation: 'Big Ben',
+    pickupDate: '2026-08-22',
     pickupTime: '14:00',
-    returnDate: '2026-08-14',
+    returnDate: '2026-08-26',
     returnTime: '14:00',
     days: 4,
-    dailyRate: 250,
-    rentalSubtotal: 1000,
-    selectedExtras: [],
-    extrasTotal: 0,
-    taxes: 100,
-    depositAmount: 500,
-    totalAmount: 1100,
-    amountPaid: 1100,
-    balanceDue: 0,
-    paymentType: 'full',
+    dailyRate: 120,
+    rentalSubtotal: 480,
+    selectedExtras: [
+      { id: 'extra-gps', name: 'GPS Navigation System', description: '', price: 15, priceType: 'per_day' }
+    ],
+    extrasTotal: 60,
+    taxes: 54,
+    depositAmount: 250,
+    totalAmount: 594,
+    amountPaid: 200,
+    balanceDue: 394,
+    paymentType: 'deposit',
     paymentMethod: 'card',
     customer: {
-      fullName: 'John Renter',
-      email: 'customer@demo.com',
-      phone: '+1 (242) 555-0182',
-      address: '14 Bay Street, Nassau, Bahamas',
-      driverLicenseNumber: 'DL-BAH-9920148'
+      fullName: 'Sarah Jenkins',
+      email: 'sarah.j@example.com',
+      phone: '+1 (242) 555-0133',
+      address: '22 Ocean Club Dr, Paradise Island',
+      driverLicenseNumber: 'DL-US-98124501'
     },
-    status: 'Completed',
-    createdAt: '2026-08-05T12:00:00Z'
+    status: 'Active Rental',
+    createdAt: '2026-08-19T14:30:00Z'
   }
 ];
 
@@ -138,30 +140,46 @@ const RentalContext = createContext<RentalContextType | undefined>(undefined);
 export const RentalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [vehicles, setVehicles] = useState<Vehicle[]>(VEHICLES_DATA);
   const [bookings, setBookings] = useState<Booking[]>(INITIAL_DEMO_BOOKINGS);
-  const [wishlist, setWishlist] = useState<string[]>(['car-1', 'car-5']);
+  const [wishlist, setWishlist] = useState<string[]>([]);
   const [searchCriteria, setSearchCriteria] = useState<SearchCriteria>(defaultSearchCriteria);
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
 
+  // Initialize from LocalStorage
   useEffect(() => {
-    const savedVehicles = localStorage.getItem('dreamsrent_vehicles');
-    if (savedVehicles) {
-      try { setVehicles(JSON.parse(savedVehicles)); } catch(e) {}
-    }
-    const savedBookings = localStorage.getItem('dreamsrent_bookings');
-    if (savedBookings) {
-      try { setBookings(JSON.parse(savedBookings)); } catch(e) {}
-    }
     const savedWishlist = localStorage.getItem('dreamsrent_wishlist');
     if (savedWishlist) {
-      try { setWishlist(JSON.parse(savedWishlist)); } catch(e) {}
+      try { setWishlist(JSON.parse(savedWishlist)); } catch (e) {}
+    }
+
+    const savedBookings = localStorage.getItem('dreamsrent_bookings');
+    if (savedBookings) {
+      try { setBookings(JSON.parse(savedBookings)); } catch (e) {}
+    }
+
+    const savedVehicles = localStorage.getItem('dreamsrent_custom_vehicles');
+    if (savedVehicles) {
+      try { 
+        const parsed = JSON.parse(savedVehicles);
+        if (Array.isArray(parsed) && parsed.length >= 20) {
+          setVehicles(parsed);
+        } else {
+          setVehicles(VEHICLES_DATA);
+        }
+      } catch (e) {
+        setVehicles(VEHICLES_DATA);
+      }
+    } else {
+      setVehicles(VEHICLES_DATA);
     }
   }, []);
 
   const toggleWishlist = (vehicleId: string) => {
     setWishlist(prev => {
-      const updated = prev.includes(vehicleId) ? prev.filter(id => id !== vehicleId) : [...prev, vehicleId];
-      localStorage.setItem('dreamsrent_wishlist', JSON.stringify(updated));
-      return updated;
+      const next = prev.includes(vehicleId)
+        ? prev.filter(id => id !== vehicleId)
+        : [...prev, vehicleId];
+      localStorage.setItem('dreamsrent_wishlist', JSON.stringify(next));
+      return next;
     });
   };
 
@@ -170,89 +188,102 @@ export const RentalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const resetFilters = () => setFilters(defaultFilters);
 
   const createBooking = (bookingData: Omit<Booking, 'id' | 'reservationNumber' | 'createdAt'>): Booking => {
-    const randomNum = Math.floor(100000 + Math.random() * 900000);
     const newBooking: Booking = {
       ...bookingData,
-      id: 'book-' + Date.now(),
-      reservationNumber: `RES-2026-${randomNum}`,
+      id: `book-${Date.now()}`,
+      reservationNumber: `RES-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`,
       createdAt: new Date().toISOString()
     };
-    const updated = [newBooking, ...bookings];
-    setBookings(updated);
-    localStorage.setItem('dreamsrent_bookings', JSON.stringify(updated));
+
+    setBookings(prev => {
+      const updated = [newBooking, ...prev];
+      localStorage.setItem('dreamsrent_bookings', JSON.stringify(updated));
+      return updated;
+    });
+
     return newBooking;
   };
 
   const cancelBooking = (bookingId: string) => {
-    const updated = bookings.map(b => b.id === bookingId ? { ...b, status: 'Cancelled' as const } : b);
-    setBookings(updated);
-    localStorage.setItem('dreamsrent_bookings', JSON.stringify(updated));
+    setBookings(prev => {
+      const updated = prev.map(b => b.id === bookingId ? { ...b, status: 'Cancelled' as const } : b);
+      localStorage.setItem('dreamsrent_bookings', JSON.stringify(updated));
+      return updated;
+    });
   };
 
   const updateBookingStatus = (bookingId: string, status: Booking['status']) => {
-    const updated = bookings.map(b => b.id === bookingId ? { ...b, status } : b);
-    setBookings(updated);
-    localStorage.setItem('dreamsrent_bookings', JSON.stringify(updated));
+    setBookings(prev => {
+      const updated = prev.map(b => b.id === bookingId ? { ...b, status } : b);
+      localStorage.setItem('dreamsrent_bookings', JSON.stringify(updated));
+      return updated;
+    });
   };
 
-  const addVehicle = (vehicle: Vehicle) => {
-    const updated = [vehicle, ...vehicles];
-    setVehicles(updated);
-    localStorage.setItem('dreamsrent_vehicles', JSON.stringify(updated));
+  const addVehicle = (newCar: Vehicle) => {
+    setVehicles(prev => {
+      const updated = [newCar, ...prev];
+      localStorage.setItem('dreamsrent_custom_vehicles', JSON.stringify(updated));
+      return updated;
+    });
   };
 
-  const updateVehicle = (id: string, updatedFields: Partial<Vehicle>) => {
-    const updated = vehicles.map(v => v.id === id ? { ...v, ...updatedFields } : v);
-    setVehicles(updated);
-    localStorage.setItem('dreamsrent_vehicles', JSON.stringify(updated));
+  const updateVehicle = (id: string, updated: Partial<Vehicle>) => {
+    setVehicles(prev => {
+      const next = prev.map(v => v.id === id ? { ...v, ...updated } : v);
+      localStorage.setItem('dreamsrent_custom_vehicles', JSON.stringify(next));
+      return next;
+    });
   };
 
   const deleteVehicle = (id: string) => {
-    const updated = vehicles.filter(v => v.id !== id);
-    setVehicles(updated);
-    localStorage.setItem('dreamsrent_vehicles', JSON.stringify(updated));
+    setVehicles(prev => {
+      const next = prev.filter(v => v.id !== id);
+      localStorage.setItem('dreamsrent_custom_vehicles', JSON.stringify(next));
+      return next;
+    });
   };
 
-  const filteredVehicles = vehicles.filter(v => {
+  // Compute Filtered Vehicles
+  const filteredVehicles = vehicles.filter(car => {
+    if (filters.category !== 'All' && car.category !== filters.category) return false;
+    if (filters.location !== 'All' && car.location !== filters.location) return false;
+    if (filters.transmission !== 'All' && car.specs.transmission !== filters.transmission) return false;
+    if (filters.seats !== null && car.specs.seats < filters.seats) return false;
+    if (car.pricePerDay > filters.maxPrice) return false;
     if (filters.searchQuery) {
       const q = filters.searchQuery.toLowerCase();
-      const matchTitle = v.title.toLowerCase().includes(q);
-      const matchBrand = v.brand.toLowerCase().includes(q);
-      const matchCat = v.category.toLowerCase().includes(q);
-      if (!matchTitle && !matchBrand && !matchCat) return false;
-    }
-    if (filters.category !== 'All' && v.category !== filters.category) return false;
-    if (filters.location !== 'All' && v.location !== filters.location) return false;
-    if (filters.transmission !== 'All' && v.specs.transmission !== filters.transmission) return false;
-    if (filters.seats !== null && v.specs.seats < filters.seats) return false;
-    if (v.pricePerDay > filters.maxPrice) return false;
-    if (filters.selectedFeatures.length > 0) {
-      const hasAll = filters.selectedFeatures.every(f => v.features.includes(f));
-      if (!hasAll) return false;
+      const match = car.title.toLowerCase().includes(q) ||
+                    car.brand.toLowerCase().includes(q) ||
+                    car.model.toLowerCase().includes(q) ||
+                    car.location.toLowerCase().includes(q);
+      if (!match) return false;
     }
     return true;
   });
 
   return (
-    <RentalContext.Provider value={{
-      vehicles,
-      bookings,
-      wishlist,
-      searchCriteria,
-      filters,
-      setSearchCriteria,
-      setFilters,
-      resetFilters,
-      toggleWishlist,
-      isInWishlist,
-      createBooking,
-      cancelBooking,
-      updateBookingStatus,
-      addVehicle,
-      updateVehicle,
-      deleteVehicle,
-      filteredVehicles
-    }}>
+    <RentalContext.Provider
+      value={{
+        vehicles,
+        bookings,
+        wishlist,
+        searchCriteria,
+        filters,
+        setSearchCriteria,
+        setFilters,
+        resetFilters,
+        toggleWishlist,
+        isInWishlist,
+        createBooking,
+        cancelBooking,
+        updateBookingStatus,
+        addVehicle,
+        updateVehicle,
+        deleteVehicle,
+        filteredVehicles
+      }}
+    >
       {children}
     </RentalContext.Provider>
   );
@@ -260,6 +291,8 @@ export const RentalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
 export const useRental = () => {
   const context = useContext(RentalContext);
-  if (!context) throw new Error('useRental must be used within a RentalProvider');
+  if (!context) {
+    throw new Error('useRental must be used within a RentalProvider');
+  }
   return context;
 };

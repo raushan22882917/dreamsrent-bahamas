@@ -13,12 +13,12 @@ interface AuthContextType {
 const DEMO_USERS: Record<UserRole, User> = {
   admin: {
     id: 'user-admin',
-    name: 'Administrator',
-    email: 'admin@example.com',
+    name: 'Admin Administrator',
+    email: 'admin@dreamsrent.com',
     role: 'admin',
     avatar: '/images/user_image.jpg',
     phone: '+1 (242) 555-0199',
-    address: 'Nassau Main Office, Bahamas'
+    address: 'DreamsRent HQ, Nassau, Bahamas'
   },
   vendor: {
     id: 'user-vendor-11',
@@ -54,8 +54,8 @@ const DEMO_USERS: Record<UserRole, User> = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Default to Vendor Demo as shown in user's screenshot
-  const [user, setUser] = useState<User | null>(DEMO_USERS.vendor);
+  // Default to Admin as requested by the user
+  const [user, setUser] = useState<User | null>(DEMO_USERS.admin);
 
   useEffect(() => {
     const saved = localStorage.getItem('dreamsrent_auth_user');
@@ -63,16 +63,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         setUser(JSON.parse(saved));
       } catch (e) {
-        setUser(DEMO_USERS.vendor);
+        setUser(DEMO_USERS.admin);
       }
+    } else {
+      setUser(DEMO_USERS.admin);
     }
   }, []);
 
   const login = (role: UserRole, customEmail?: string) => {
-    const selected = { ...DEMO_USERS[role] };
-    if (customEmail) selected.email = customEmail;
-    setUser(selected);
-    localStorage.setItem('dreamsrent_auth_user', JSON.stringify(selected));
+    const baseUser = DEMO_USERS[role] || DEMO_USERS.admin;
+    const finalUser: User = {
+      ...baseUser,
+      email: customEmail || baseUser.email
+    };
+    setUser(finalUser);
+    localStorage.setItem('dreamsrent_auth_user', JSON.stringify(finalUser));
   };
 
   const logout = () => {
@@ -81,7 +86,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        isAuthenticated: !!user
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -89,6 +101,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within an AuthProvider');
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
   return context;
 };
