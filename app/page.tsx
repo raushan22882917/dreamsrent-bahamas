@@ -8,24 +8,30 @@ import { HeroSearch } from '../components/home/HeroSearch';
 import { VehicleCard } from '../components/ui/VehicleCard';
 import { 
   ArrowRight,
-  ChevronRight
+  ChevronRight,
+  ShieldCheck,
+  Award,
+  Users,
+  Car,
+  CheckCircle2,
+  PhoneCall
 } from 'lucide-react';
 
-const POPULAR_BRANDS = ['Mazda', 'Audi', 'Honda', 'Toyota', 'Acura', 'Tesla'];
+const POPULAR_BRANDS = ['All Brands', 'Ferrari', 'Chevrolet', 'Tesla', 'Audi', 'Porsche', 'Mercedes-Benz', 'BMW', 'Land Rover'];
 
 export default function HomePage() {
   const { vehicles } = useRental();
-  const [selectedBrand, setSelectedBrand] = useState('Mazda');
+  const [selectedBrand, setSelectedBrand] = useState('All Brands');
 
   // Filter vehicles by brand for the Brand Tabs section
-  const brandVehicles = vehicles.filter(v => 
-    v.brand.toLowerCase() === selectedBrand.toLowerCase() || 
-    v.title.toLowerCase().includes(selectedBrand.toLowerCase())
-  );
+  const filteredBrandVehicles = selectedBrand === 'All Brands'
+    ? vehicles
+    : vehicles.filter(v => 
+        v.brand.toLowerCase() === selectedBrand.toLowerCase() || 
+        v.title.toLowerCase().includes(selectedBrand.toLowerCase())
+      );
 
-  const displayedBrandVehicles = brandVehicles.length > 0 
-    ? brandVehicles 
-    : vehicles.slice(0, 3);
+  const displayedBrandVehicles = filteredBrandVehicles.slice(0, 6);
 
   return (
     <div className="min-h-screen bg-white">
@@ -44,7 +50,7 @@ export default function HomePage() {
               {/* Badge */}
               <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white shadow-[0_4px_20px_rgba(0,0,0,0.06)] border border-[#EAEDF0] text-xs font-semibold text-[#201F1D]">
                 <span className="text-base leading-none">👍</span>
-                <span>100% Trusted car rental platform in the World</span>
+                <span>100% Trusted car rental platform in the Bahamas</span>
               </div>
 
               {/* Heading */}
@@ -55,7 +61,7 @@ export default function HomePage() {
 
               {/* Subtitle */}
               <p className="text-sm sm:text-base text-[#7A7A7A] font-normal leading-relaxed max-w-xl">
-                Experience the ultimate in comfort, performance, and sophistication with our luxury car rentals. From sleek sedans and stylish coupes to spacious SUVs and elegant convertibles, we offer a range of premium vehicles to suit your preferences and lifestyle.
+                Experience the ultimate in comfort, performance, and sophistication with our luxury car rentals. From sleek sedans and stylish coupes to spacious SUVs and elegant convertibles, we offer a range of premium vehicles to suit your preferences.
               </p>
 
               {/* CTA Button */}
@@ -64,7 +70,7 @@ export default function HomePage() {
                   href="/rental-grid"
                   className="inline-flex items-center space-x-2 px-7 py-3.5 bg-white hover:bg-[#FFA633] text-[#201F1D] hover:text-white font-bold rounded-xl border border-[#201F1D] hover:border-[#FFA633] shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
                 >
-                  <span>View All Cars</span>
+                  <span>View All 24 Cars</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -85,7 +91,7 @@ export default function HomePage() {
       </section>
 
       {/* 2. Floating Search Box Banner */}
-      <div className="px-4 sm:px-6 lg:px-8">
+      <div className="px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-8 relative z-20">
         <HeroSearch />
       </div>
 
@@ -171,7 +177,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. Explore Most Popular Cars (Brand Tab Filters) */}
+      {/* 4. Explore Most Popular Cars (Real Database Vehicles) */}
       <section className="bg-[#F8F9FA] py-24 border-y border-[#EAEDF0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -183,7 +189,7 @@ export default function HomePage() {
               <img src="/images/title-head.png" alt="" className="h-2.5 w-auto object-contain" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
             </div>
             <p className="text-sm text-[#7A7A7A]">
-              Here&apos;s a list of some of the most popular cars globally, based on sales and customer preferences
+              Live vehicle fleet pulled directly from our database, featuring full engine specs and instant booking.
             </p>
           </div>
 
@@ -194,7 +200,7 @@ export default function HomePage() {
                 <button
                   key={brand}
                   onClick={() => setSelectedBrand(brand)}
-                  className={`px-6 py-2 rounded-xl font-semibold text-xs transition-all ${
+                  className={`px-5 py-2 rounded-xl font-semibold text-xs transition-all ${
                     selectedBrand === brand
                       ? 'bg-[#FFA633] text-white shadow'
                       : 'text-[#6B7280] hover:text-[#201F1D] hover:bg-gray-50'
@@ -206,11 +212,22 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Brand Cars Grid */}
+          {/* Brand Cars Grid (Real Photos from car-01.jpg to car-24.jpg) */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {displayedBrandVehicles.map((vehicle) => (
               <VehicleCard key={vehicle.id} vehicle={vehicle} viewMode="grid" />
             ))}
+          </div>
+
+          {/* View All Fleet CTA */}
+          <div className="text-center mt-12">
+            <Link
+              href="/rental-grid"
+              className="inline-flex items-center space-x-2 px-8 py-3.5 bg-[#1B1B1B] hover:bg-black text-white text-xs font-bold rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5"
+            >
+              <span>Explore All {vehicles.length} Vehicles in Fleet</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
 
         </div>
@@ -226,125 +243,70 @@ export default function HomePage() {
             <img src="/images/title-head.png" alt="" className="h-2.5 w-auto object-contain" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
           </div>
           <p className="text-sm text-[#7A7A7A]">
-            Most popular worldwide Car Category due to their reliability, affordability, and features.
+            Choose from our luxury vehicle categories to match your travel needs.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
           {[
-            { name: 'Crossover', count: '5 Cars', icon: '🚙' },
-            { name: 'Family MPV', count: '1 Car', icon: '🚐' },
-            { name: 'Pickup', count: '3 Cars', icon: '🛻' },
-            { name: 'Sedan', count: '5 Cars', icon: '🚗' },
-            { name: 'Sports Coupe', count: '4 Cars', icon: '🏎️' }
+            { name: 'Sport', count: '6 Cars', img: '/images/cars/car-01.jpg' },
+            { name: 'Luxury', count: '5 Cars', img: '/images/cars/car-04.jpg' },
+            { name: 'SUV / 4x4', count: '5 Cars', img: '/images/cars/car-07.jpg' },
+            { name: 'Convertible', count: '3 Cars', img: '/images/cars/car-02.jpg' },
+            { name: 'Sedan', count: '3 Cars', img: '/images/cars/car-03.jpg' },
+            { name: 'Economy', count: '2 Cars', img: '/images/cars/car-05.jpg' }
           ].map((type) => (
             <Link
               key={type.name}
               href={`/rental-grid?category=${encodeURIComponent(type.name)}`}
-              className="p-6 bg-white rounded-2xl border border-[#EAEDF0] text-center hover:border-[#FFA633] hover:shadow-[0_10px_25px_rgba(0,0,0,0.06)] transition-all group block"
+              className="bg-white p-4 rounded-2xl border border-[#EAEDF0] hover:border-[#FFA633] shadow-sm hover:shadow-lg transition-all text-center group"
             >
-              <div className="text-4xl mb-3 transform group-hover:scale-110 transition-transform">
-                {type.icon}
-              </div>
-              <h6 className="font-bold text-[#201F1D] text-sm group-hover:text-[#FFA633] transition-colors">
-                {type.name}
-              </h6>
-              <p className="text-xs text-[#878A99] mt-1">{type.count}</p>
+              <img src={type.img} alt={type.name} className="w-full h-24 object-cover rounded-xl mb-3 group-hover:scale-105 transition-transform" />
+              <h4 className="font-bold text-xs text-[#201F1D] group-hover:text-[#FFA633] transition-colors">{type.name}</h4>
+              <p className="text-[11px] text-[#878A99]">{type.count}</p>
             </Link>
           ))}
         </div>
-
-        <div className="text-center mt-10">
-          <Link
-            href="/rental-grid"
-            className="inline-flex items-center space-x-2 px-7 py-3.5 bg-[#201F1D] hover:bg-[#FFA633] text-white font-bold text-xs rounded-xl shadow transition-colors"
-          >
-            <span>View all Cars</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
       </section>
 
-      {/* 6. Facts By The Numbers */}
-      <section className="relative bg-[#201F1D] text-white py-20 overflow-hidden">
-        <div className="absolute inset-0 opacity-15 pointer-events-none">
-          <img src="/images/count-bg.jpg" alt="" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
-        </div>
-        <img src="/images/facts-left.png" alt="" className="absolute left-0 top-0 opacity-20 pointer-events-none" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
-        <img src="/images/facts-right.png" alt="" className="absolute right-0 bottom-0 opacity-20 pointer-events-none" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          
-          <div className="text-center max-w-xl mx-auto mb-16">
-            <h2 className="text-3xl font-extrabold text-white">Facts By The Numbers</h2>
-            <div className="flex justify-center my-3">
-              <img src="/images/title-head.png" alt="" className="h-2.5 w-auto object-contain filter brightness-200" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
-            </div>
-            <p className="text-sm text-gray-400">
-              Here are some dreamsrent interesting facts presented by the numbers
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      {/* 6. Why Choose DreamsRent Feature Banner */}
+      <section className="bg-[#127384] text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
             
-            <div className="p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm space-y-2">
-              <div className="w-12 h-12 mx-auto rounded-full bg-[#FFA633]/20 flex items-center justify-center mb-4">
-                <img src="/images/bx-car.svg" alt="Customers" className="w-6 h-6" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
+            <div className="space-y-2">
+              <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-white mx-auto md:mx-0">
+                <ShieldCheck className="w-6 h-6 text-[#FFA633]" />
               </div>
-              <h4 className="text-3xl sm:text-4xl font-extrabold text-[#FFA633]">16 K+</h4>
-              <p className="text-xs font-medium text-gray-300">Happy Customers</p>
+              <h4 className="font-bold text-base">Verified Fleet</h4>
+              <p className="text-xs text-white/80">Every vehicle undergoes strict multi-point safety inspection.</p>
             </div>
 
-            <div className="p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm space-y-2">
-              <div className="w-12 h-12 mx-auto rounded-full bg-[#FFA633]/20 flex items-center justify-center mb-4">
-                <img src="/images/bx-headphone.svg" alt="Cars" className="w-6 h-6" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
+            <div className="space-y-2">
+              <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-white mx-auto md:mx-0">
+                <Award className="w-6 h-6 text-[#FFA633]" />
               </div>
-              <h4 className="text-3xl sm:text-4xl font-extrabold text-[#FFA633]">2547 +</h4>
-              <p className="text-xs font-medium text-gray-300">Count of Cars</p>
+              <h4 className="font-bold text-base">Best Rate Guarantee</h4>
+              <p className="text-xs text-white/80">Competitive daily rates with transparent pricing and zero hidden fees.</p>
             </div>
 
-            <div className="p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm space-y-2">
-              <div className="w-12 h-12 mx-auto rounded-full bg-[#FFA633]/20 flex items-center justify-center mb-4">
-                <img src="/images/bx-heart.svg" alt="Solutions" className="w-6 h-6" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
+            <div className="space-y-2">
+              <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-white mx-auto md:mx-0">
+                <Users className="w-6 h-6 text-[#FFA633]" />
               </div>
-              <h4 className="text-3xl sm:text-4xl font-extrabold text-[#FFA633]">625 K+</h4>
-              <p className="text-xs font-medium text-gray-300">Car Center Solutions</p>
+              <h4 className="font-bold text-base">VIP Chauffeur Option</h4>
+              <p className="text-xs text-white/80">Licensed professional drivers available for airport transfers & tours.</p>
             </div>
 
-            <div className="p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm space-y-2">
-              <div className="w-12 h-12 mx-auto rounded-full bg-[#FFA633]/20 flex items-center justify-center mb-4">
-                <img src="/images/bx-history.svg" alt="Kilometers" className="w-6 h-6" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
+            <div className="space-y-2">
+              <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-white mx-auto md:mx-0">
+                <PhoneCall className="w-6 h-6 text-[#FFA633]" />
               </div>
-              <h4 className="text-3xl sm:text-4xl font-extrabold text-[#FFA633]">200 K+</h4>
-              <p className="text-xs font-medium text-gray-300">Total Kilometer</p>
+              <h4 className="font-bold text-base">24/7 Roadside Assistance</h4>
+              <p className="text-xs text-white/80">Round-the-clock emergency support across all islands.</p>
             </div>
 
           </div>
-        </div>
-      </section>
-
-      {/* 7. Recommended Car Rental Deals */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
-          <div>
-            <h2 className="text-3xl font-extrabold text-[#201F1D]">Recommended Car Rental deals</h2>
-            <p className="text-sm text-[#7A7A7A] mt-2">
-              Here are some versatile options that cater to different needs
-            </p>
-          </div>
-          <Link
-            href="/rental-grid"
-            className="text-xs font-bold text-[#FFA633] hover:text-[#e5952e] flex items-center mt-4 md:mt-0"
-          >
-            <span>View All Deals</span>
-            <ChevronRight className="w-4 h-4 ml-1" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {vehicles.slice(0, 6).map((vehicle) => (
-            <VehicleCard key={vehicle.id} vehicle={vehicle} viewMode="grid" />
-          ))}
         </div>
       </section>
 
