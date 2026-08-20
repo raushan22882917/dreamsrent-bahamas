@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useAuth } from '../../../context/AuthContext';
 import { useRental } from '../../../context/RentalContext';
+import { DashboardLayout } from '../../../components/layout/DashboardLayout';
 import { 
   Car, 
   DollarSign, 
@@ -12,37 +13,35 @@ import {
   Plus, 
   Eye, 
   Edit3, 
-  CheckCircle,
-  Clock,
-  ArrowRight,
-  ShieldCheck,
-  CreditCard
+  ArrowRight
 } from 'lucide-react';
 
 export default function VendorDashboard() {
   const { user } = useAuth();
   const { vehicles, bookings } = useRental();
 
-  // Vendor's fleet
-  const vendorVehicles = vehicles.slice(0, 6); // Demo vendor fleet
+  const vendorVehicles = vehicles.slice(0, 6);
   const totalRevenue = 14850;
   const activeRentals = bookings.filter(b => b.status === 'Active Rental' || b.status === 'Confirmed');
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] py-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <DashboardLayout
+      title="Vendor Dashboard"
+      breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Vendor Dashboard' }]}
+    >
+      <div className="space-y-8 max-w-6xl">
         
         {/* Vendor Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between bg-white p-6 sm:p-8 rounded-2xl border border-[#EAEDF0] shadow-sm mb-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between bg-white p-6 rounded-2xl border border-[#EAEDF0] shadow-sm">
           <div className="flex items-center space-x-4">
             <img 
               src={user?.avatar || '/images/user_image.jpg'} 
               alt={user?.name} 
-              className="w-16 h-16 rounded-full object-cover border-2 border-[#FFA633]"
+              className="w-14 h-14 rounded-full object-cover border-2 border-[#FFA633]"
             />
             <div>
               <div className="flex items-center space-x-2">
-                <h1 className="text-2xl font-black text-[#201F1D]">{user?.name || 'Vendor Demo'}</h1>
+                <h2 className="text-xl font-bold text-[#201F1D]">{user?.name || 'Vendor Demo'}</h2>
                 <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full">
                   Verified Host
                 </span>
@@ -54,75 +53,73 @@ export default function VendorDashboard() {
           <div className="mt-4 md:mt-0 flex items-center space-x-3">
             <Link
               href="/vendor/cars"
-              className="px-5 py-2.5 bg-[#FFA633] hover:bg-[#e5952e] text-white font-bold text-xs rounded-xl shadow flex items-center space-x-2 transition-all"
+              className="px-4 py-2 bg-[#FFA633] hover:bg-[#e5952e] text-white font-bold text-xs rounded-xl shadow flex items-center space-x-1.5 transition-all"
             >
-              <Plus className="w-4 h-4" />
-              <span>List New Car</span>
+              <Plus className="w-3.5 h-3.5" />
+              <span>Add Vehicle</span>
             </Link>
             <Link
               href="/vendor/settings"
-              className="px-5 py-2.5 bg-[#201F1D] hover:bg-gray-800 text-white font-bold text-xs rounded-xl shadow flex items-center space-x-2 transition-all"
+              className="px-4 py-2 bg-[#1B1B1B] hover:bg-black text-white font-bold text-xs rounded-xl shadow transition-all"
             >
-              <span>Host Settings</span>
+              <span>Settings</span>
             </Link>
           </div>
         </div>
 
         {/* 4 Quick Stat Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          
-          <div className="bg-white p-6 rounded-2xl border border-[#EAEDF0] shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-bold text-[#878A99] uppercase tracking-wider">My Active Fleet</span>
-              <div className="w-10 h-10 rounded-xl bg-orange-100 text-[#FFA633] flex items-center justify-center">
-                <Car className="w-5 h-5" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="bg-white p-5 rounded-2xl border border-[#EAEDF0] shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-bold text-[#878A99] uppercase">Active Fleet</span>
+              <div className="w-9 h-9 rounded-xl bg-orange-100 text-[#FFA633] flex items-center justify-center">
+                <Car className="w-4 h-4" />
               </div>
             </div>
-            <h3 className="text-3xl font-black text-[#201F1D]">{vendorVehicles.length}</h3>
-            <p className="text-xs text-emerald-600 font-semibold mt-1">100% Insured & Active</p>
+            <h3 className="text-2xl font-black text-[#201F1D]">{vendorVehicles.length}</h3>
+            <p className="text-[11px] text-emerald-600 font-semibold mt-1">100% Insured</p>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-[#EAEDF0] shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-bold text-[#878A99] uppercase tracking-wider">Total Earnings</span>
-              <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                <DollarSign className="w-5 h-5" />
+          <div className="bg-white p-5 rounded-2xl border border-[#EAEDF0] shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-bold text-[#878A99] uppercase">Earnings</span>
+              <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                <DollarSign className="w-4 h-4" />
               </div>
             </div>
-            <h3 className="text-3xl font-black text-[#201F1D]">${totalRevenue.toLocaleString()}</h3>
-            <p className="text-xs text-gray-400 mt-1">Payout scheduled in 3 days</p>
+            <h3 className="text-2xl font-black text-[#201F1D]">${totalRevenue.toLocaleString()}</h3>
+            <p className="text-[11px] text-gray-400 mt-1">Payout in 3 days</p>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-[#EAEDF0] shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-bold text-[#878A99] uppercase tracking-wider">Current Bookings</span>
-              <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
-                <Calendar className="w-5 h-5" />
+          <div className="bg-white p-5 rounded-2xl border border-[#EAEDF0] shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-bold text-[#878A99] uppercase">Bookings</span>
+              <div className="w-9 h-9 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+                <Calendar className="w-4 h-4" />
               </div>
             </div>
-            <h3 className="text-3xl font-black text-[#201F1D]">{activeRentals.length}</h3>
-            <p className="text-xs text-blue-600 font-semibold mt-1">Active rentals on road</p>
+            <h3 className="text-2xl font-black text-[#201F1D]">{activeRentals.length}</h3>
+            <p className="text-[11px] text-blue-600 font-semibold mt-1">Active rentals</p>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-[#EAEDF0] shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-bold text-[#878A99] uppercase tracking-wider">Host Rating</span>
-              <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-500 flex items-center justify-center">
-                <TrendingUp className="w-5 h-5" />
+          <div className="bg-white p-5 rounded-2xl border border-[#EAEDF0] shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-bold text-[#878A99] uppercase">Rating</span>
+              <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-500 flex items-center justify-center">
+                <TrendingUp className="w-4 h-4" />
               </div>
             </div>
-            <h3 className="text-3xl font-black text-[#201F1D]">4.95 / 5.0</h3>
-            <p className="text-xs text-[#878A99] mt-1">From 48 verified renters</p>
+            <h3 className="text-2xl font-black text-[#201F1D]">4.95 / 5.0</h3>
+            <p className="text-[11px] text-[#878A99] mt-1">48 reviews</p>
           </div>
-
         </div>
 
-        {/* Vendor's Listed Vehicles Table */}
-        <div className="bg-white rounded-2xl border border-[#EAEDF0] shadow-sm p-6 mb-8">
-          <div className="flex items-center justify-between mb-6">
+        {/* Fleet Table */}
+        <div className="bg-white rounded-2xl border border-[#EAEDF0] shadow-sm p-6">
+          <div className="flex items-center justify-between mb-5">
             <div>
-              <h2 className="text-lg font-bold text-[#201F1D]">My Listed Vehicles</h2>
-              <p className="text-xs text-[#878A99]">Manage rates, availability, and vehicle dispatch status</p>
+              <h3 className="text-base font-bold text-[#201F1D]">My Listed Vehicles</h3>
+              <p className="text-xs text-[#878A99]">Manage rates and vehicle status</p>
             </div>
             <Link href="/vendor/cars" className="text-xs font-bold text-[#FFA633] hover:underline flex items-center">
               <span>View All Fleet</span>
@@ -144,7 +141,7 @@ export default function VendorDashboard() {
               </thead>
               <tbody className="divide-y divide-[#EAEDF0]">
                 {vendorVehicles.map((car) => (
-                  <tr key={car.id} className="hover:bg-gray-50 transition-colors">
+                  <tr key={car.id} className="hover:bg-gray-50">
                     <td className="py-3 px-4">
                       <div className="flex items-center space-x-3">
                         <img src={car.featuredImage} alt={car.title} className="w-12 h-9 rounded-lg object-cover" />
@@ -164,10 +161,10 @@ export default function VendorDashboard() {
                     </td>
                     <td className="py-3 px-4 text-right">
                       <div className="flex items-center justify-end space-x-2">
-                        <Link href={`/rental/${car.slug}`} className="p-1.5 text-gray-500 hover:text-[#FFA633] bg-gray-100 rounded-lg" title="Preview Car">
+                        <Link href={`/rental/${car.slug}`} className="p-1.5 text-gray-500 hover:text-[#FFA633] bg-gray-100 rounded-lg">
                           <Eye className="w-3.5 h-3.5" />
                         </Link>
-                        <Link href="/vendor/cars" className="p-1.5 text-gray-500 hover:text-blue-600 bg-gray-100 rounded-lg" title="Edit Pricing">
+                        <Link href="/vendor/cars" className="p-1.5 text-gray-500 hover:text-blue-600 bg-gray-100 rounded-lg">
                           <Edit3 className="w-3.5 h-3.5" />
                         </Link>
                       </div>
@@ -180,6 +177,6 @@ export default function VendorDashboard() {
         </div>
 
       </div>
-    </div>
+    </DashboardLayout>
   );
 }
