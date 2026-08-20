@@ -11,10 +11,6 @@ import {
   Menu, 
   X, 
   ChevronDown,
-  Phone,
-  Mail,
-  Clock,
-  Sparkles,
   Bell,
   Check
 } from 'lucide-react';
@@ -27,6 +23,8 @@ export const Header: React.FC = () => {
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [pagesDropdownOpen, setPagesDropdownOpen] = useState(false);
   const [rentalsDropdownOpen, setRentalsDropdownOpen] = useState(false);
+  const [homeDropdownOpen, setHomeDropdownOpen] = useState(false);
+  const [blogDropdownOpen, setBlogDropdownOpen] = useState(false);
 
   const handleRoleChange = (newRole: UserRole) => {
     login(newRole);
@@ -40,33 +38,56 @@ export const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
-          {/* Logo with official SVG */}
-          <Link href="/" className="flex items-center space-x-2 group">
+          {/* Logo with official logo.png */}
+          <Link href="/" className="flex items-center group">
             <img 
-              src="/images/logo.svg" 
+              src="/images/logo.png" 
               alt="Dreams Rent" 
-              className="h-10 w-auto object-contain"
+              className="h-9 sm:h-10 w-auto object-contain transition-transform group-hover:scale-102"
               onError={(e) => {
-                (e.target as HTMLElement).style.display = 'none';
+                // Fallback to SVG if PNG is missing
+                (e.target as HTMLImageElement).src = '/images/logo.svg';
               }}
             />
-            <div className="flex flex-col">
-              <span className="text-2xl font-black tracking-tight text-[#201F1D] flex items-center">
-                DREAMS<span className="text-[#FFA633] ml-0.5">RENT</span>
-              </span>
-            </div>
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center space-x-1">
-            <Link 
-              href="/" 
-              className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
-                pathname === '/' ? 'text-[#FFA633]' : 'text-[#201F1D] hover:text-[#FFA633]'
-              }`}
+          <nav className="hidden lg:flex items-center space-x-2">
+            
+            {/* Home Dropdown */}
+            <div 
+              className="relative"
+              onMouseEnter={() => setHomeDropdownOpen(true)}
+              onMouseLeave={() => setHomeDropdownOpen(false)}
             >
-              Home
-            </Link>
+              <Link 
+                href="/"
+                className={`flex items-center px-3.5 py-2 text-sm font-semibold transition-colors ${
+                  pathname === '/' ? 'text-[#FFA633]' : 'text-[#201F1D] hover:text-[#FFA633]'
+                }`}
+              >
+                Home <ChevronDown className="w-3.5 h-3.5 ml-1 text-gray-400" />
+              </Link>
+
+              {homeDropdownOpen && (
+                <div className="absolute top-full left-0 w-44 bg-white rounded-xl shadow-xl border border-[#EAEDF0] py-2 z-50 animate-in fade-in duration-150">
+                  <Link 
+                    href="/" 
+                    className="flex items-center px-4 py-2 text-xs font-semibold text-[#FFA633] bg-orange-50/50"
+                    onClick={() => setHomeDropdownOpen(false)}
+                  >
+                    Home 01
+                  </Link>
+                  <Link 
+                    href="/rental-grid" 
+                    className="flex items-center px-4 py-2 text-xs font-semibold text-[#201F1D] hover:text-[#FFA633] hover:bg-gray-50"
+                    onClick={() => setHomeDropdownOpen(false)}
+                  >
+                    Home 02 (Fleet)
+                  </Link>
+                </div>
+              )}
+            </div>
 
             {/* Rentals Dropdown */}
             <div 
@@ -75,11 +96,11 @@ export const Header: React.FC = () => {
               onMouseLeave={() => setRentalsDropdownOpen(false)}
             >
               <button 
-                className={`flex items-center px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
+                className={`flex items-center px-3.5 py-2 text-sm font-semibold transition-colors ${
                   ['/rental-grid', '/rental-list'].includes(pathname) ? 'text-[#FFA633]' : 'text-[#201F1D] hover:text-[#FFA633]'
                 }`}
               >
-                Rental <ChevronDown className="w-3.5 h-3.5 ml-1" />
+                Rental <ChevronDown className="w-3.5 h-3.5 ml-1 text-gray-400" />
               </button>
 
               {rentalsDropdownOpen && (
@@ -109,11 +130,11 @@ export const Header: React.FC = () => {
               onMouseLeave={() => setPagesDropdownOpen(false)}
             >
               <button 
-                className={`flex items-center px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
+                className={`flex items-center px-3.5 py-2 text-sm font-semibold transition-colors ${
                   ['/about-us', '/our-team', '/faq'].includes(pathname) ? 'text-[#FFA633]' : 'text-[#201F1D] hover:text-[#FFA633]'
                 }`}
               >
-                Pages <ChevronDown className="w-3.5 h-3.5 ml-1" />
+                Pages <ChevronDown className="w-3.5 h-3.5 ml-1 text-gray-400" />
               </button>
 
               {pagesDropdownOpen && (
@@ -143,9 +164,41 @@ export const Header: React.FC = () => {
               )}
             </div>
 
+            {/* Blog Dropdown */}
+            <div 
+              className="relative"
+              onMouseEnter={() => setBlogDropdownOpen(true)}
+              onMouseLeave={() => setBlogDropdownOpen(false)}
+            >
+              <button 
+                className="flex items-center px-3.5 py-2 text-sm font-semibold text-[#201F1D] hover:text-[#FFA633] transition-colors"
+              >
+                Blog <ChevronDown className="w-3.5 h-3.5 ml-1 text-gray-400" />
+              </button>
+
+              {blogDropdownOpen && (
+                <div className="absolute top-full left-0 w-44 bg-white rounded-xl shadow-xl border border-[#EAEDF0] py-2 z-50 animate-in fade-in duration-150">
+                  <Link 
+                    href="/faq" 
+                    className="flex items-center px-4 py-2 text-xs font-semibold text-[#201F1D] hover:text-[#FFA633] hover:bg-gray-50"
+                    onClick={() => setBlogDropdownOpen(false)}
+                  >
+                    Blog List
+                  </Link>
+                  <Link 
+                    href="/faq" 
+                    className="flex items-center px-4 py-2 text-xs font-semibold text-[#201F1D] hover:text-[#FFA633] hover:bg-gray-50"
+                    onClick={() => setBlogDropdownOpen(false)}
+                  >
+                    Blog Grid
+                  </Link>
+                </div>
+              )}
+            </div>
+
             <Link 
               href="/contact-us" 
-              className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
+              className={`px-3.5 py-2 text-sm font-semibold transition-colors ${
                 pathname === '/contact-us' ? 'text-[#FFA633]' : 'text-[#201F1D] hover:text-[#FFA633]'
               }`}
             >
@@ -154,12 +207,12 @@ export const Header: React.FC = () => {
           </nav>
 
           {/* Right User & Notifications Bar */}
-          <div className="hidden lg:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-3.5">
             
             {/* Notification Bell */}
-            <button className="w-10 h-10 rounded-full bg-[#F5F6F8] hover:bg-gray-200/80 flex items-center justify-center text-gray-700 transition-colors relative">
+            <button className="w-9 h-9 rounded-full bg-[#F5F6F8] hover:bg-gray-200/70 flex items-center justify-center text-gray-700 transition-colors relative">
               <Bell className="w-4 h-4" />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-[#FFA633] rounded-full"></span>
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#FFA633] rounded-full"></span>
             </button>
 
             {/* Wishlist Link */}
@@ -168,7 +221,7 @@ export const Header: React.FC = () => {
               className="relative p-2 text-gray-600 hover:text-[#FFA633] transition-colors"
               title="Saved Vehicles"
             >
-              <Heart className="w-5 h-5" />
+              <Heart className="w-4 h-4" />
               {wishlist.length > 0 && (
                 <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#FFA633] text-white rounded-full text-[10px] flex items-center justify-center font-bold">
                   {wishlist.length}
@@ -176,12 +229,12 @@ export const Header: React.FC = () => {
               )}
             </Link>
 
-            {/* User Dropdown */}
+            {/* User Dropdown (Matches Screenshot with round avatar + Vendor Demo ˇ) */}
             {isAuthenticated && user ? (
               <div className="relative">
                 <button 
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center space-x-2.5 p-1 pl-2 pr-3 bg-white hover:bg-gray-50 rounded-full border border-[#EAEDF0] transition-all"
+                  className="flex items-center space-x-2.5 p-1 pl-1.5 pr-2.5 hover:bg-gray-50 rounded-full transition-all"
                 >
                   <img 
                     src={user.avatar || '/images/user_image.jpg'} 
@@ -221,7 +274,7 @@ export const Header: React.FC = () => {
                             Payments
                           </Link>
                           <Link href="/vendor/settings" className="flex items-center px-4 py-2 font-medium text-gray-700 hover:text-[#FFA633] hover:bg-gray-50" onClick={() => setUserDropdownOpen(false)}>
-                            Vendor Settings
+                            Settings
                           </Link>
                         </>
                       )}

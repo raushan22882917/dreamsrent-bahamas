@@ -28,9 +28,9 @@ export default function HomePage() {
     : vehicles.slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA]">
+    <div className="min-h-screen bg-white">
       
-      {/* 1. Hero Banner (Exact Match to DreamsRent Live Screenshot) */}
+      {/* 1. Hero Banner (Exact Match to DreamsRent Live Theme) */}
       <section 
         className="relative bg-white py-16 sm:py-24 overflow-hidden bg-cover bg-no-repeat bg-right"
         style={{ backgroundImage: "url('/images/banner.jpg')" }}
@@ -89,75 +89,115 @@ export default function HomePage() {
         <HeroSearch />
       </div>
 
-      {/* 3. How It Works Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-3xl font-extrabold text-[#201F1D]">How It Works</h2>
-          <p className="text-sm text-[#7A7A7A] mt-2">
-            Booking a car rental is a straightforward process that typically involves the following steps
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* 3. How It Works Section (100% Pixel-Perfect Match to Screenshot) */}
+      <section className="bg-white py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          {/* Step 1 */}
-          <div className="bg-white p-8 rounded-2xl border border-[#EAEDF0] shadow-sm hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-all group">
-            <div className="w-16 h-16 rounded-full border-2 border-gray-200 bg-gray-50 flex items-center justify-center mb-6 group-hover:border-[#FFA633] transition-colors">
-              <img src="/images/services-icon-01.svg" alt="Choose Location" className="w-8 h-8" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
+          {/* Section Heading */}
+          <div className="text-center max-w-xl mx-auto mb-16">
+            <h2 className="text-3xl sm:text-[38px] font-extrabold text-[#201F1D] tracking-tight">
+              How It Works
+            </h2>
+            <div className="flex justify-center my-3">
+              <img src="/images/title-head.png" alt="" className="h-2.5 w-auto object-contain" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
             </div>
-            <h3 className="text-lg font-bold text-[#201F1D] mb-3">1. Choose Locations</h3>
-            <p className="text-xs text-[#7A7A7A] leading-relaxed">
-              Determine the date & location for your car rental. Consider factors such as your travel itinerary, pickup/drop-off locations (e.g., airport, city center) and duration of rental.
+            <p className="text-sm text-[#7A7A7A] leading-relaxed">
+              Booking a car rental is a straightforward process that typically involves the following steps
             </p>
           </div>
 
-          {/* Step 2 */}
-          <div className="bg-white p-8 rounded-2xl border border-[#EAEDF0] shadow-sm hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-all group">
-            <div className="w-16 h-16 rounded-full border-2 border-[#FFA633]/40 bg-[#FFA633]/10 flex items-center justify-center mb-6">
-              <img src="/images/services-icon-02.svg" alt="Pick-Up Locations" className="w-8 h-8" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
+          {/* 3 Process Steps */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-14 text-center">
+            
+            {/* Step 1: Choose Locations (Teal #127384) */}
+            <div className="flex flex-col items-center group">
+              <div className="w-[104px] h-[104px] rounded-full border-2 border-dashed border-[#127384] p-2 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300">
+                <div className="w-full h-full rounded-full bg-[#127384] flex items-center justify-center shadow-md">
+                  <img 
+                    src="/images/services-icon-01.svg" 
+                    alt="Choose Locations" 
+                    className="w-10 h-10 filter brightness-0 invert" 
+                  />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-[#201F1D] mb-3">
+                1. Choose Locations
+              </h3>
+              <p className="text-xs sm:text-[13px] text-[#7A7A7A] leading-relaxed max-w-sm">
+                Determine the date & location for your car rental. Consider factors such as your travel itinerary, pickup/drop-off locations (e.g., airport, city center) and duration of rental.
+              </p>
             </div>
-            <h3 className="text-lg font-bold text-[#201F1D] mb-3">2. Pick-Up Locations</h3>
-            <p className="text-xs text-[#7A7A7A] leading-relaxed">
-              Check the availability of your desired vehicle type for your chosen dates and location. Ensure that the rental rates, taxes, fees, and any additional charges.
-            </p>
-          </div>
 
-          {/* Step 3 */}
-          <div className="bg-white p-8 rounded-2xl border border-[#EAEDF0] shadow-sm hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-all group">
-            <div className="w-16 h-16 rounded-full border-2 border-gray-200 bg-gray-50 flex items-center justify-center mb-6 group-hover:border-[#FFA633] transition-colors">
-              <img src="/images/services-icon-03.svg" alt="Book your Car" className="w-8 h-8" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
+            {/* Step 2: Pick-Up Locations (Orange #FFA633) */}
+            <div className="flex flex-col items-center group">
+              <div className="w-[104px] h-[104px] rounded-full border-2 border-dashed border-[#FFA633] p-2 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300">
+                <div className="w-full h-full rounded-full bg-[#FFA633] flex items-center justify-center shadow-md">
+                  <img 
+                    src="/images/services-icon-02.svg" 
+                    alt="Pick-Up Locations" 
+                    className="w-10 h-10 filter brightness-0 invert" 
+                  />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-[#201F1D] mb-3">
+                2. Pick-Up Locations
+              </h3>
+              <p className="text-xs sm:text-[13px] text-[#7A7A7A] leading-relaxed max-w-sm">
+                Check the availability of your desired vehicle type for your chosen dates and location. Ensure that the rental rates, taxes, fees, and any additional charges.
+              </p>
             </div>
-            <h3 className="text-lg font-bold text-[#201F1D] mb-3">3. Book your Car</h3>
-            <p className="text-xs text-[#7A7A7A] leading-relaxed">
-              Once you've found car rental option, proceed to make a reservation. Provide the required information, including your details, driver's license, and payment details.
-            </p>
+
+            {/* Step 3: Book your Car (Charcoal #201F1D) */}
+            <div className="flex flex-col items-center group">
+              <div className="w-[104px] h-[104px] rounded-full border-2 border-dashed border-[#201F1D] p-2 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300">
+                <div className="w-full h-full rounded-full bg-[#201F1D] flex items-center justify-center shadow-md">
+                  <img 
+                    src="/images/services-icon-03.svg" 
+                    alt="Book your Car" 
+                    className="w-10 h-10 filter brightness-0 invert" 
+                  />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-[#201F1D] mb-3">
+                3. Book your Car
+              </h3>
+              <p className="text-xs sm:text-[13px] text-[#7A7A7A] leading-relaxed max-w-sm">
+                Once you&apos;ve found car rental option, proceed to make a reservation. Provide the required information, including your details, driver&apos;s license, and payment details.
+              </p>
+            </div>
+
           </div>
 
         </div>
       </section>
 
       {/* 4. Explore Most Popular Cars (Brand Tab Filters) */}
-      <section className="bg-white py-20 border-y border-[#EAEDF0]">
+      <section className="bg-[#F8F9FA] py-24 border-y border-[#EAEDF0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <h2 className="text-3xl font-extrabold text-[#201F1D]">Explore Most Popular Cars</h2>
-            <p className="text-sm text-[#7A7A7A] mt-2">
-              Here's a list of some of the most popular cars globally, based on sales and customer preferences
+          <div className="text-center max-w-xl mx-auto mb-10">
+            <h2 className="text-3xl sm:text-[38px] font-extrabold text-[#201F1D] tracking-tight">
+              Explore Most Popular Cars
+            </h2>
+            <div className="flex justify-center my-3">
+              <img src="/images/title-head.png" alt="" className="h-2.5 w-auto object-contain" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
+            </div>
+            <p className="text-sm text-[#7A7A7A]">
+              Here&apos;s a list of some of the most popular cars globally, based on sales and customer preferences
             </p>
           </div>
 
           {/* Brand Tabs */}
           <div className="flex justify-center mb-12">
-            <div className="inline-flex flex-wrap items-center justify-center gap-2 p-1 bg-[#F5F6F8] rounded-xl border border-[#EAEDF0]">
+            <div className="inline-flex flex-wrap items-center justify-center gap-2 p-1.5 bg-white rounded-2xl border border-[#EAEDF0] shadow-sm">
               {POPULAR_BRANDS.map((brand) => (
                 <button
                   key={brand}
                   onClick={() => setSelectedBrand(brand)}
-                  className={`px-6 py-2 rounded-lg font-semibold text-xs transition-all ${
+                  className={`px-6 py-2 rounded-xl font-semibold text-xs transition-all ${
                     selectedBrand === brand
-                      ? 'bg-[#FFA633] text-white shadow-sm'
-                      : 'text-[#6B7280] hover:text-[#201F1D] hover:bg-white'
+                      ? 'bg-[#FFA633] text-white shadow'
+                      : 'text-[#6B7280] hover:text-[#201F1D] hover:bg-gray-50'
                   }`}
                 >
                   {brand}
@@ -177,10 +217,15 @@ export default function HomePage() {
       </section>
 
       {/* 5. Most Popular Cartypes */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-3xl font-extrabold text-[#201F1D]">Most Popular Cartypes</h2>
-          <p className="text-sm text-[#7A7A7A] mt-2">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="text-center max-w-xl mx-auto mb-12">
+          <h2 className="text-3xl sm:text-[38px] font-extrabold text-[#201F1D] tracking-tight">
+            Most Popular Cartypes
+          </h2>
+          <div className="flex justify-center my-3">
+            <img src="/images/title-head.png" alt="" className="h-2.5 w-auto object-contain" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
+          </div>
+          <p className="text-sm text-[#7A7A7A]">
             Most popular worldwide Car Category due to their reliability, affordability, and features.
           </p>
         </div>
@@ -212,7 +257,7 @@ export default function HomePage() {
         <div className="text-center mt-10">
           <Link
             href="/rental-grid"
-            className="inline-flex items-center space-x-2 px-7 py-3 bg-[#201F1D] hover:bg-[#FFA633] text-white font-bold text-xs rounded-xl shadow transition-colors"
+            className="inline-flex items-center space-x-2 px-7 py-3.5 bg-[#201F1D] hover:bg-[#FFA633] text-white font-bold text-xs rounded-xl shadow transition-colors"
           >
             <span>View all Cars</span>
             <ArrowRight className="w-4 h-4" />
@@ -230,9 +275,12 @@ export default function HomePage() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           
-          <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="text-center max-w-xl mx-auto mb-16">
             <h2 className="text-3xl font-extrabold text-white">Facts By The Numbers</h2>
-            <p className="text-sm text-gray-400 mt-2">
+            <div className="flex justify-center my-3">
+              <img src="/images/title-head.png" alt="" className="h-2.5 w-auto object-contain filter brightness-200" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
+            </div>
+            <p className="text-sm text-gray-400">
               Here are some dreamsrent interesting facts presented by the numbers
             </p>
           </div>
@@ -276,7 +324,7 @@ export default function HomePage() {
       </section>
 
       {/* 7. Recommended Car Rental Deals */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <div>
             <h2 className="text-3xl font-extrabold text-[#201F1D]">Recommended Car Rental deals</h2>
