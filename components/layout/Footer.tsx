@@ -3,20 +3,19 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { 
-  Car, 
+  Award, 
+  ShieldCheck, 
+  HeartHandshake, 
   MapPin, 
   Phone, 
   Mail, 
   Clock, 
-  ShieldCheck, 
-  HeartHandshake, 
-  Award,
-  Send,
-  Check,
-  Globe,
-  Share2,
-  MessageCircle,
-  Radio
+  Send, 
+  Check, 
+  Globe, 
+  Share2, 
+  MessageCircle, 
+  Radio 
 } from 'lucide-react';
 
 export const Footer: React.FC = () => {
@@ -33,9 +32,9 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-gray-950 text-gray-300 pt-16 pb-12 border-t border-gray-800 relative overflow-hidden">
+    <footer className="bg-[#151515] text-gray-300 pt-16 pb-12 border-t border-gray-800 relative overflow-hidden">
       
-      {/* Decorative PHP theme background flourishes */}
+      {/* Decorative theme background flourishes */}
       <img 
         src="/images/footer-left.png" 
         alt="" 
@@ -51,149 +50,224 @@ export const Footer: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Top Feature Pillars */}
+        {/* Top 3 Feature Pillars */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-12 border-b border-gray-800">
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-500 flex-shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-[#FFA633]/15 border border-[#FFA633]/30 flex items-center justify-center text-[#FFA633] flex-shrink-0">
               <Award className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-bold text-white text-base">Best Rate Guarantee</h4>
-              <p className="text-xs text-gray-400">Direct island bookings with zero hidden booking fees</p>
+              <h4 className="font-bold text-white text-sm sm:text-base">Best Rate Guarantee</h4>
+              <p className="text-xs text-gray-400 mt-0.5">Direct reservations with zero hidden booking fees</p>
             </div>
           </div>
 
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-500 flex-shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-[#FFA633]/15 border border-[#FFA633]/30 flex items-center justify-center text-[#FFA633] flex-shrink-0">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-bold text-white text-base">Free Cancellation</h4>
-              <p className="text-xs text-gray-400">Cancel 100% free up to 24 hours prior to pickup</p>
+              <h4 className="font-bold text-white text-sm sm:text-base">Free Cancellation</h4>
+              <p className="text-xs text-gray-400 mt-0.5">Cancel 100% free up to 24 hours prior to pickup</p>
             </div>
           </div>
 
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-500 flex-shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-[#FFA633]/15 border border-[#FFA633]/30 flex items-center justify-center text-[#FFA633] flex-shrink-0">
               <HeartHandshake className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-bold text-white text-base">24/7 Roadside Assistance</h4>
-              <p className="text-xs text-gray-400">Instant on-island support across all Bahamas branches</p>
+              <h4 className="font-bold text-white text-sm sm:text-base">24/7 Roadside Assistance</h4>
+              <p className="text-xs text-gray-400 mt-0.5">Instant customer support across all locations</p>
             </div>
           </div>
         </div>
 
-        {/* Main Footer Columns */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 py-12">
+        {/* 4 Main Footer Columns */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 py-12">
           
-          {/* Brand Info & Newsletter */}
-          <div className="space-y-4">
-            <Link href="/" className="flex items-center space-x-3">
+          {/* Column 1: Brand Info & Newsletter (lg:col-span-4) */}
+          <div className="lg:col-span-4 space-y-4">
+            <Link href="/" className="inline-block">
               <img 
-                src="/images/logo.svg" 
-                alt="DreamsRent Bahamas" 
-                className="h-9 w-auto brightness-200"
-                onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+                src="/images/logo.png" 
+                alt="DreamsRent" 
+                className="h-10 w-auto object-contain brightness-0 invert"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/images/logo.svg';
+                }}
               />
-              <span className="text-xl font-black text-white">
-                DREAMS<span className="text-orange-500">RENT</span>
-              </span>
             </Link>
-            
-            <p className="text-xs text-gray-400 leading-relaxed">
+
+            <p className="text-xs text-gray-400 leading-relaxed pr-4">
               Bahamas premier exotic and luxury car rental service. Offering high-performance convertibles, premium sedans, and 7-passenger island SUVs.
             </p>
 
-            {/* Newsletter Subscription Box */}
             <div className="pt-2">
-              <span className="text-xs font-bold text-white uppercase tracking-wider block mb-2">
-                Subscribe to Island Deals
-              </span>
-              <form onSubmit={handleSubscribe} className="flex">
-                <input
-                  type="email"
-                  required
-                  placeholder="Enter email address..."
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-l-xl text-xs text-white focus:outline-none focus:border-orange-500"
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold rounded-r-xl transition-colors flex items-center"
-                >
-                  <Send className="w-3.5 h-3.5" />
-                </button>
-              </form>
-              {subscribed && (
-                <p className="text-[11px] text-emerald-400 font-semibold mt-1 flex items-center">
-                  <Check className="w-3 h-3 mr-1" /> Subscribed successfully!
-                </p>
+              <h5 className="text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-2">
+                Subscribe to Exclusive Deals
+              </h5>
+              
+              {subscribed ? (
+                <div className="p-3 bg-emerald-950/80 border border-emerald-600/50 rounded-xl text-emerald-400 text-xs flex items-center space-x-2">
+                  <Check className="w-4 h-4 text-emerald-400" />
+                  <span>Thank you for subscribing!</span>
+                </div>
+              ) : (
+                <form onSubmit={handleSubscribe} className="flex items-center">
+                  <input
+                    type="email"
+                    required
+                    placeholder="Enter email address..."
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="flex-1 px-3.5 py-2.5 bg-white/10 border border-gray-700 rounded-l-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#FFA633]"
+                  />
+                  <button
+                    type="submit"
+                    className="px-4 py-2.5 bg-[#FFA633] hover:bg-[#e5952e] text-white rounded-r-xl transition-colors flex items-center justify-center"
+                    title="Subscribe"
+                  >
+                    <Send className="w-4 h-4" />
+                  </button>
+                </form>
               )}
             </div>
           </div>
 
-          {/* About & Quick Links */}
-          <div>
-            <h4 className="text-white font-bold text-sm mb-4 tracking-wider uppercase">About & Quick Links</h4>
-            <ul className="space-y-2.5 text-xs">
-              <li><Link href="/about-us" className="hover:text-orange-400 transition-colors">About DreamsRent</Link></li>
-              <li><Link href="/our-team" className="hover:text-orange-400 transition-colors">Our Leadership Team</Link></li>
-              <li><Link href="/rental-grid" className="hover:text-orange-400 transition-colors">Rental Fleet Grid</Link></li>
-              <li><Link href="/rental-list" className="hover:text-orange-400 transition-colors">Rental Fleet List</Link></li>
-              <li><Link href="/faq" className="hover:text-orange-400 transition-colors">Rental FAQs & Policies</Link></li>
-              <li><Link href="/contact-us" className="hover:text-orange-400 transition-colors">Contact Support</Link></li>
+          {/* Column 2: About & Quick Links (lg:col-span-3) */}
+          <div className="lg:col-span-3 space-y-3">
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider border-b border-gray-800 pb-2">
+              About & Quick Links
+            </h4>
+            <ul className="space-y-2 text-xs text-gray-400">
+              <li>
+                <Link href="/about-us" className="hover:text-[#FFA633] transition-colors">
+                  About DreamsRent
+                </Link>
+              </li>
+              <li>
+                <Link href="/our-team" className="hover:text-[#FFA633] transition-colors">
+                  Our Leadership Team
+                </Link>
+              </li>
+              <li>
+                <Link href="/rental-grid" className="hover:text-[#FFA633] transition-colors">
+                  Rental Fleet Grid
+                </Link>
+              </li>
+              <li>
+                <Link href="/rental-list" className="hover:text-[#FFA633] transition-colors">
+                  Rental Fleet List
+                </Link>
+              </li>
+              <li>
+                <Link href="/faq" className="hover:text-[#FFA633] transition-colors">
+                  Rental FAQs & Policies
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact-us" className="hover:text-[#FFA633] transition-colors">
+                  Contact Support
+                </Link>
+              </li>
             </ul>
           </div>
 
-          {/* Locations & Categories */}
-          <div>
-            <h4 className="text-white font-bold text-sm mb-4 tracking-wider uppercase">Island Hubs & Vehicles</h4>
-            <ul className="space-y-2.5 text-xs">
-              <li className="flex items-start"><MapPin className="w-3.5 h-3.5 mr-1.5 text-orange-500 flex-shrink-0 mt-0.5" /> Nassau Airport Terminal (NAS)</li>
-              <li className="flex items-start"><MapPin className="w-3.5 h-3.5 mr-1.5 text-orange-500 flex-shrink-0 mt-0.5" /> Paradise Island Marina</li>
-              <li className="flex items-start"><MapPin className="w-3.5 h-3.5 mr-1.5 text-orange-500 flex-shrink-0 mt-0.5" /> Cable Beach Resort Strip</li>
-              <li className="flex items-start"><MapPin className="w-3.5 h-3.5 mr-1.5 text-orange-500 flex-shrink-0 mt-0.5" /> Freeport Harbour Center</li>
-              <li className="flex items-start"><MapPin className="w-3.5 h-3.5 mr-1.5 text-orange-500 flex-shrink-0 mt-0.5" /> Downtown Cruise Port</li>
+          {/* Column 3: Locations & Hubs (lg:col-span-2) */}
+          <div className="lg:col-span-2 space-y-3">
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider border-b border-gray-800 pb-2">
+              Locations & Hubs
+            </h4>
+            <ul className="space-y-2 text-xs text-gray-400">
+              <li className="flex items-center space-x-1.5 hover:text-[#FFA633] cursor-pointer">
+                <MapPin className="w-3.5 h-3.5 text-[#FFA633] flex-shrink-0" />
+                <span>Tower Bridge</span>
+              </li>
+              <li className="flex items-center space-x-1.5 hover:text-[#FFA633] cursor-pointer">
+                <MapPin className="w-3.5 h-3.5 text-[#FFA633] flex-shrink-0" />
+                <span>Big Ben</span>
+              </li>
+              <li className="flex items-center space-x-1.5 hover:text-[#FFA633] cursor-pointer">
+                <MapPin className="w-3.5 h-3.5 text-[#FFA633] flex-shrink-0" />
+                <span>Buckingham Palace</span>
+              </li>
+              <li className="flex items-center space-x-1.5 hover:text-[#FFA633] cursor-pointer">
+                <MapPin className="w-3.5 h-3.5 text-[#FFA633] flex-shrink-0" />
+                <span>Nassau Airport (NAS)</span>
+              </li>
+              <li className="flex items-center space-x-1.5 hover:text-[#FFA633] cursor-pointer">
+                <MapPin className="w-3.5 h-3.5 text-[#FFA633] flex-shrink-0" />
+                <span>Paradise Island</span>
+              </li>
+              <li className="flex items-center space-x-1.5 hover:text-[#FFA633] cursor-pointer">
+                <MapPin className="w-3.5 h-3.5 text-[#FFA633] flex-shrink-0" />
+                <span>Cable Beach</span>
+              </li>
             </ul>
           </div>
 
-          {/* Contact & Socials */}
-          <div>
-            <h4 className="text-white font-bold text-sm mb-4 tracking-wider uppercase">Customer Concierge</h4>
-            <div className="space-y-2 text-xs text-gray-400 mb-6">
-              <p className="flex items-center"><Phone className="w-3.5 h-3.5 mr-2 text-orange-500" /> +1 (242) 555-DREAMS</p>
-              <p className="flex items-center"><Mail className="w-3.5 h-3.5 mr-2 text-orange-500" /> reservations@dreamsrent.com</p>
-              <p className="flex items-center"><Clock className="w-3.5 h-3.5 mr-2 text-orange-500" /> 24 Hours / 7 Days a Week</p>
+          {/* Column 4: Customer Concierge (lg:col-span-3) */}
+          <div className="lg:col-span-3 space-y-3">
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider border-b border-gray-800 pb-2">
+              Customer Concierge
+            </h4>
+            <div className="space-y-2.5 text-xs text-gray-400">
+              <div className="flex items-center space-x-2.5">
+                <Phone className="w-4 h-4 text-[#FFA633] flex-shrink-0" />
+                <a href="tel:+12425553732" className="hover:text-white transition-colors">
+                  +1 (242) 555-DREAMS
+                </a>
+              </div>
+              <div className="flex items-center space-x-2.5">
+                <Mail className="w-4 h-4 text-[#FFA633] flex-shrink-0" />
+                <a href="mailto:reservations@dreamsrent.com" className="hover:text-white transition-colors">
+                  reservations@dreamsrent.com
+                </a>
+              </div>
+              <div className="flex items-center space-x-2.5">
+                <Clock className="w-4 h-4 text-[#FFA633] flex-shrink-0" />
+                <span>24 Hours / 7 Days a Week</span>
+              </div>
             </div>
 
-            <span className="text-xs font-bold text-white uppercase tracking-wider block mb-2">Connect With Us</span>
-            <div className="flex space-x-2">
-              <span className="w-8 h-8 rounded-lg bg-gray-900 border border-gray-800 flex items-center justify-center text-gray-400 hover:text-orange-400 hover:border-orange-500 cursor-pointer transition-colors" title="Global Portal">
-                <Globe className="w-4 h-4" />
+            <div className="pt-2">
+              <span className="text-[11px] font-bold text-gray-300 uppercase tracking-wider block mb-2">
+                Connect With Us
               </span>
-              <span className="w-8 h-8 rounded-lg bg-gray-900 border border-gray-800 flex items-center justify-center text-gray-400 hover:text-orange-400 hover:border-orange-500 cursor-pointer transition-colors" title="Social Channels">
-                <Share2 className="w-4 h-4" />
-              </span>
-              <span className="w-8 h-8 rounded-lg bg-gray-900 border border-gray-800 flex items-center justify-center text-gray-400 hover:text-orange-400 hover:border-orange-500 cursor-pointer transition-colors" title="Live WhatsApp Concierge">
-                <MessageCircle className="w-4 h-4" />
-              </span>
-              <span className="w-8 h-8 rounded-lg bg-gray-900 border border-gray-800 flex items-center justify-center text-gray-400 hover:text-orange-400 hover:border-orange-500 cursor-pointer transition-colors" title="Live Dispatch Broadcast">
-                <Radio className="w-4 h-4" />
-              </span>
+              <div className="flex items-center space-x-2">
+                <a href="#" className="w-8 h-8 rounded-lg bg-white/10 hover:bg-[#FFA633] hover:text-white text-gray-300 flex items-center justify-center transition-colors">
+                  <Globe className="w-4 h-4" />
+                </a>
+                <a href="#" className="w-8 h-8 rounded-lg bg-white/10 hover:bg-[#FFA633] hover:text-white text-gray-300 flex items-center justify-center transition-colors">
+                  <Share2 className="w-4 h-4" />
+                </a>
+                <a href="#" className="w-8 h-8 rounded-lg bg-white/10 hover:bg-[#FFA633] hover:text-white text-gray-300 flex items-center justify-center transition-colors">
+                  <MessageCircle className="w-4 h-4" />
+                </a>
+                <a href="#" className="w-8 h-8 rounded-lg bg-white/10 hover:bg-[#FFA633] hover:text-white text-gray-300 flex items-center justify-center transition-colors">
+                  <Radio className="w-4 h-4" />
+                </a>
+              </div>
             </div>
+
           </div>
 
         </div>
 
-        {/* Bottom Copyright */}
-        <div className="pt-8 border-t border-gray-900 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500">
-          <p>© 2026 DreamsRent Bahamas Car Rental. All rights reserved.</p>
-          <div className="flex space-x-6 mt-4 sm:mt-0">
-            <span>Privacy Policy</span>
-            <span>Terms of Rental Agreement</span>
-            <span>Security Deposit Terms</span>
+        {/* Bottom Copyright Bar */}
+        <div className="pt-8 mt-4 border-t border-gray-800 flex flex-col md:flex-row items-center justify-between text-xs text-gray-500 gap-4">
+          <p>© 2026 DreamsRent. All rights reserved.</p>
+          <div className="flex flex-wrap items-center gap-6">
+            <Link href="/faq" className="hover:text-gray-300 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/faq" className="hover:text-gray-300 transition-colors">
+              Terms of Rental Agreement
+            </Link>
+            <Link href="/faq" className="hover:text-gray-300 transition-colors">
+              Security Deposit Terms
+            </Link>
           </div>
         </div>
 
