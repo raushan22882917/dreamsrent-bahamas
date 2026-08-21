@@ -53,7 +53,7 @@ export const Header: React.FC = () => {
           <Link href="/" className="flex items-center group py-2">
             <img 
               src="/images/logo.png" 
-              alt="DreamsRent Bahamas" 
+              alt="Bahamas Luxury Drive" 
               className="h-9 sm:h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-102"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = '/images/logo.svg';

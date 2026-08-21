@@ -83,11 +83,11 @@ async function main() {
 
     console.log(' Seeding 5 Role Users...');
     const users = [
-      { id: 'usr_admin_1', name: 'Admin Administrator', email: 'admin@dreamsrent.com', password: 'adminpassword123', role: 'admin', avatar: '/images/team/team_ceo_male_1787225259487.jpg', phone: '+1 (242) 555-0199', address: 'Nassau Main Office, Bahamas', driver_license: 'DL-BAH-0001-ADM' },
-      { id: 'usr_vendor_1', name: 'Carlos Host (Vendor)', email: 'vendor@dreamsrent.com', password: 'vendorpassword123', role: 'vendor', avatar: '/images/team/team_business_head_1787225318994.jpg', phone: '+1 (242) 555-0144', address: 'Paradise Island Marina Hub, Bahamas', driver_license: 'DL-BAH-0089-VND' },
-      { id: 'usr_vendor_2', name: 'Elena Luxury Fleets (Vendor 2)', email: 'elena@dreamsrent.com', password: 'vendorpassword123', role: 'vendor', avatar: '/images/team/team_ceo_female_1787225300600.jpg', phone: '+1 (242) 555-0122', address: 'Cable Beach Resort Hub', driver_license: 'DL-BAH-0092-VND' },
-      { id: 'usr_driver_1', name: 'Marcus Chauffeur (Driver)', email: 'driver@dreamsrent.com', password: 'driverpassword123', role: 'driver', avatar: '/images/team/team_business_head_1787225318994.jpg', phone: '+1 (242) 555-0188', address: 'Lynden Pindling Airport (NAS), Bahamas', driver_license: 'DL-BAH-98442-EXP2028' },
-      { id: 'usr_customer_1', name: 'John Renter (Customer)', email: 'customer@dreamsrent.com', password: 'customerpassword123', role: 'customer', avatar: '/images/user_image.jpg', phone: '+1 (242) 555-0182', address: '14 Bay Street, Nassau, Bahamas', driver_license: 'DL-BAH-9920148' }
+      { id: 'usr_admin_1', name: 'Admin Administrator', email: 'admin@bahamasluxurydrive.com', password: 'adminpassword123', role: 'admin', avatar: '/images/team/team_ceo_male_1787225259487.jpg', phone: '+1 (242) 555-0199', address: 'Nassau Main Office, Bahamas', driver_license: 'DL-BAH-0001-ADM' },
+      { id: 'usr_vendor_1', name: 'Carlos Host (Vendor)', email: 'vendor@bahamasluxurydrive.com', password: 'vendorpassword123', role: 'vendor', avatar: '/images/team/team_business_head_1787225318994.jpg', phone: '+1 (242) 555-0144', address: 'Paradise Island Marina Hub, Bahamas', driver_license: 'DL-BAH-0089-VND' },
+      { id: 'usr_vendor_2', name: 'Elena Luxury Fleets (Vendor 2)', email: 'elena@bahamasluxurydrive.com', password: 'vendorpassword123', role: 'vendor', avatar: '/images/team/team_ceo_female_1787225300600.jpg', phone: '+1 (242) 555-0122', address: 'Cable Beach Resort Hub', driver_license: 'DL-BAH-0092-VND' },
+      { id: 'usr_driver_1', name: 'Marcus Chauffeur (Driver)', email: 'driver@bahamasluxurydrive.com', password: 'driverpassword123', role: 'driver', avatar: '/images/team/team_business_head_1787225318994.jpg', phone: '+1 (242) 555-0188', address: 'Lynden Pindling Airport (NAS), Bahamas', driver_license: 'DL-BAH-98442-EXP2028' },
+      { id: 'usr_customer_1', name: 'John Renter (Customer)', email: 'customer@bahamasluxurydrive.com', password: 'customerpassword123', role: 'customer', avatar: '/images/user_image.jpg', phone: '+1 (242) 555-0182', address: '14 Bay Street, Nassau, Bahamas', driver_license: 'DL-BAH-9920148' }
     ];
 
     for (const u of users) {

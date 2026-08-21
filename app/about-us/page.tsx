@@ -10,13 +10,13 @@ export default function AboutUsPage() {
         {/* Hero Section */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
           <span className="px-3.5 py-1 bg-orange-100 text-orange-700 font-bold text-xs rounded-full uppercase tracking-wider">
-            About DreamsRent Bahamas
+            About Bahamas Luxury Drive
           </span>
           <h1 className="text-4xl sm:text-5xl font-black text-gray-900 leading-tight">
             Redefining Island Travel with Luxury & Reliability
           </h1>
           <p className="text-base text-gray-600 leading-relaxed">
-            Founded with a passion for world-class hospitality, DreamsRent provides pristine exotic cars, luxury SUVs, and executive cruisers across Nassau and Paradise Island.
+            Founded with a passion for world-class hospitality, Bahamas Luxury Drive provides pristine exotic cars, luxury SUVs, and executive cruisers across Nassau and Paradise Island.
           </p>
         </div>
 
@@ -31,7 +31,7 @@ export default function AboutUsPage() {
               We started with a vision to eliminate the standard hassles of rental car counters — long lines, surprise insurance costs, and outdated vehicles. 
             </p>
             <p className="text-sm text-gray-600 leading-relaxed">
-              Today, DreamsRent operates a 20-vehicle modern fleet with instant airport terminal handovers, flexible 20% deposits, and 24/7 roadside peace of mind.
+              Today, Bahamas Luxury Drive operates a 20-vehicle modern fleet with instant airport terminal handovers, flexible 20% deposits, and 24/7 roadside peace of mind.
             </p>
             <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-100 text-center">
               <div>
@@ -52,7 +52,7 @@ export default function AboutUsPage() {
           <div className="rounded-2xl overflow-hidden shadow-xl">
             <img 
               src="/images/cars/car-04.jpg" 
-              alt="DreamsRent Bahamas Fleet" 
+              alt="Bahamas Luxury Drive Fleet" 
               className="w-full h-80 sm:h-96 object-cover"
             />
           </div>

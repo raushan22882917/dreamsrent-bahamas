@@ -321,7 +321,7 @@ export default function HomePage() {
           
           <div className="text-center max-w-2xl mx-auto mb-14 space-y-2">
             <span className="text-xs font-bold text-[#FFA633] uppercase tracking-wider">
-              The DreamsRent Standard
+              The Bahamas Luxury Drive Standard
             </span>
             <h2 className="text-2xl sm:text-4xl font-black text-[#201F1D] tracking-tight">
               Why Discerning Travelers Choose Us

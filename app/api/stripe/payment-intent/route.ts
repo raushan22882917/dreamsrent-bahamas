@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY || 'sk_test_51MockDreamsRentSecretKeyForInstantReservationBooking2026';
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY || 'sk_test_51MockBahamasLuxuryDriveSecretKey2026';
 const stripe = new Stripe(stripeSecretKey, {
   apiVersion: '2025-02-24.acacia' as any
 });
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
         metadata: {
           reservationNumber: reservationNumber || `DR-${Date.now()}`,
           vehicleTitle: vehicleTitle || 'Rental Vehicle',
-          customerEmail: customerEmail || 'customer@dreamsrent.com'
+          customerEmail: customerEmail || 'customer@bahamasluxurydrive.com'
         },
         automatic_payment_methods: { enabled: true }
       });
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     }
 
     // Mock Client Secret for prototyping / testing when no secret key is set in environment
-    const mockPaymentIntentId = `pi_mock_${Date.now()}_dreamsrent`;
+    const mockPaymentIntentId = `pi_mock_${Date.now()}_bahamasluxurydrive`;
     const mockClientSecret = `${mockPaymentIntentId}_secret_test`;
 
     return NextResponse.json({

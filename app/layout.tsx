@@ -11,7 +11,7 @@ import { AppShell } from '../components/layout/AppShell';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'DreamsRent Bahamas - Luxury & Executive Car Rental Service',
+  title: 'Bahamas Luxury Drive - Luxury & Executive Car Rental Service',
   description: 'Bahamas premier car rental service. Rent sports convertibles, luxury sedans, and 7-passenger SUVs across Nassau Airport, Paradise Island, and Cable Beach.',
   keywords: 'car rental bahamas, nassau airport car rental, paradise island luxury rental, rent porsche bahamas, bahamas suv rental'
 };

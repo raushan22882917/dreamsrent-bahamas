@@ -11,7 +11,7 @@ const pool = new Pool({
 async function makeAdmin(targetEmail, targetName, targetPassword) {
   const client = await pool.connect();
   try {
-    const email = (targetEmail || 'admin@dreamsrent.com').toLowerCase().trim();
+    const email = (targetEmail || 'admin@bahamasluxurydrive.com').toLowerCase().trim();
     const name = targetName || 'Admin Administrator';
     const password = targetPassword || 'adminpassword123';
 
@@ -51,7 +51,7 @@ async function makeAdmin(targetEmail, targetName, targetPassword) {
 }
 
 const args = process.argv.slice(2);
-const emailArg = args[0] || 'admin@dreamsrent.com';
+const emailArg = args[0] || 'admin@bahamasluxurydrive.com';
 const nameArg = args[1] || 'Admin Administrator';
 const passArg = args[2] || 'adminpassword123';
 

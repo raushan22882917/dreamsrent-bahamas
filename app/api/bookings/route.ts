@@ -133,7 +133,7 @@ export async function POST(req: Request) {
       b.vehicleId || b.vehicle?.id,
       b.customer?.id || 'usr_customer_1',
       b.customer?.fullName || 'John Renter',
-      b.customer?.email || 'customer@dreamsrent.com',
+      b.customer?.email || 'customer@bahamasluxurydrive.com',
       b.customer?.phone || '+1 (242) 555-0182',
       b.pickupDate,
       b.returnDate,

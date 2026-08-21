@@ -49,7 +49,7 @@ export default function CheckoutPage() {
   // Form Fields
   const [customerInfo, setCustomerInfo] = useState({
     fullName: user?.name || 'John Renter',
-    email: user?.email || 'customer@dreamsrent.com',
+    email: user?.email || 'customer@bahamasluxurydrive.com',
     phone: user?.phone || '+1 (242) 555-0182',
     address: user?.address || '14 Bay Street, Nassau, Bahamas',
     driverLicenseNumber: 'DL-BAH-9920148',
@@ -91,11 +91,11 @@ export default function CheckoutPage() {
 
   const handleApplyPromo = (e: React.FormEvent) => {
     e.preventDefault();
-    if (promoCode.trim().toUpperCase() === 'SUMMER20' || promoCode.trim().toUpperCase() === 'DREAMS20') {
+    if (promoCode.trim().toUpperCase() === 'SUMMER20' || promoCode.trim().toUpperCase() === 'DRIVE20' || promoCode.trim().toUpperCase() === 'LUXURY20') {
       setDiscountPercent(20);
       setPromoApplied(true);
     } else {
-      alert('Invalid promo code. Try "SUMMER20" for 20% off!');
+      alert('Invalid promo code. Try "SUMMER20" or "DRIVE20" for 20% off!');
     }
   };
 

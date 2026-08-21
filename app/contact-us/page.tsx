@@ -40,7 +40,7 @@ export default function ContactUsPage() {
               </div>
               <h3 className="font-bold text-gray-900 text-base">Direct Phone Support</h3>
               <p className="text-xs text-gray-500">Call our 24/7 reservation hotline</p>
-              <p className="text-sm font-bold text-orange-600">+1 (242) 555-DREAMS</p>
+              <p className="text-sm font-bold text-orange-600">+1 (242) 555-DRIVE</p>
             </div>
 
             <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-3">
@@ -49,7 +49,7 @@ export default function ContactUsPage() {
               </div>
               <h3 className="font-bold text-gray-900 text-base">Email Concierge</h3>
               <p className="text-xs text-gray-500">Inquiries and corporate bookings</p>
-              <p className="text-sm font-bold text-orange-600">reservations@dreamsrent.com</p>
+              <p className="text-sm font-bold text-orange-600">reservations@bahamasluxurydrive.com</p>
             </div>
 
             <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-3">

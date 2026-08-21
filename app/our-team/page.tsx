@@ -7,21 +7,21 @@ const TEAM = [
     role: 'Chief Executive Officer & Founder',
     photo: '/images/team/team_ceo_male_1787225259487.jpg',
     bio: 'Over 15 years in luxury automotive hospitality and Caribbean fleet operations.',
-    email: 'alexander@dreamsrent.com'
+    email: 'alexander@bahamasluxurydrive.com'
   },
   {
     name: 'Sarah Jenkins',
     role: 'Head of Fleet Operations & Logistics',
     photo: '/images/team/team_ceo_female_1787225300600.jpg',
     bio: 'Oversees 20-vehicle maintenance, white-glove airport dispatch, and vehicle sanitization standards.',
-    email: 'sarah.j@dreamsrent.com'
+    email: 'sarah.j@bahamasluxurydrive.com'
   },
   {
     name: 'Marcus Richardson',
     role: 'Director of Customer Experience',
     photo: '/images/team/team_business_head_1787225318994.jpg',
     bio: 'Dedicated to providing seamless VIP resort deliveries across Paradise Island and Nassau.',
-    email: 'marcus.r@dreamsrent.com'
+    email: 'marcus.r@bahamasluxurydrive.com'
   }
 ];
 
@@ -36,7 +36,7 @@ export default function OurTeamPage() {
             Leadership Team
           </span>
           <h1 className="text-4xl sm:text-5xl font-black text-gray-900 leading-tight">
-            The People Behind DreamsRent
+            The People Behind Bahamas Luxury Drive
           </h1>
           <p className="text-base text-gray-600">
             Meet the experienced automotive hospitality team committed to making your Bahamas travels exceptional.

@@ -147,7 +147,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           <Link href="/" className="flex items-center">
             <img 
               src="/images/logo.png" 
-              alt="DreamsRent" 
+              alt="Bahamas Luxury Drive" 
               className="h-8 sm:h-9 w-auto object-contain"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = '/images/logo.svg';

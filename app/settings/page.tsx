@@ -83,7 +83,7 @@ export default function SettingsPage() {
                   </label>
                   <input 
                     type="email" 
-                    defaultValue={user?.email || 'admin@dreamsrent.com'}
+                    defaultValue={user?.email || 'admin@bahamasluxurydrive.com'}
                     required
                     className="w-full px-4 py-2.5 bg-white border border-[#EAEDF0] rounded-xl text-xs font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#FFA633]"
                   />

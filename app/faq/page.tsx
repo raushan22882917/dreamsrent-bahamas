@@ -23,12 +23,12 @@ const FAQS: FAQItem[] = [
   {
     category: 'Pickup & Delivery',
     question: 'How do I pick up my car at Nassau Airport (NAS)?',
-    answer: 'Our dedicated airport concierge will meet you immediately outside the arrivals exit terminal holding a personalized DreamsRent sign. Your vehicle is parked directly in the priority VIP lot for rapid departure in under 5 minutes.'
+    answer: 'Our dedicated airport concierge will meet you immediately outside the arrivals exit terminal holding a personalized Bahamas Luxury Drive sign. Your vehicle is parked directly in the priority VIP lot for rapid departure in under 5 minutes.'
   },
   {
     category: 'Pickup & Delivery',
     question: 'Can I return the car to a different island location?',
-    answer: 'Yes! DreamsRent supports multi-location returns. You can easily pick up at Nassau Airport and return to your resort on Paradise Island or Cable Beach.'
+    answer: 'Yes! Bahamas Luxury Drive supports multi-location returns. You can easily pick up at Nassau Airport and return to your resort on Paradise Island or Cable Beach.'
   },
   {
     category: 'Insurance & Coverage',

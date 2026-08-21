@@ -20,12 +20,12 @@ const DEMO_USERS: Record<UserRole, User> = {
     role: 'admin',
     avatar: '/images/team/team_ceo_male_1787225259487.jpg',
     phone: '+1 (242) 555-0199',
-    address: 'DreamsRent HQ, Nassau, Bahamas'
+    address: 'Bahamas Luxury Drive HQ, Nassau, Bahamas'
   },
   vendor: {
     id: 'usr_vendor_1',
     name: 'Carlos Host (Vendor)',
-    email: 'vendor@dreamsrent.com',
+    email: 'vendor@bahamasluxurydrive.com',
     role: 'vendor',
     avatar: '/images/team/team_business_head_1787225318994.jpg',
     companyName: 'Island Exotic Cars Ltd',
@@ -35,7 +35,7 @@ const DEMO_USERS: Record<UserRole, User> = {
   driver: {
     id: 'usr_driver_1',
     name: 'Marcus Chauffeur',
-    email: 'driver@dreamsrent.com',
+    email: 'driver@bahamasluxurydrive.com',
     role: 'driver',
     avatar: '/images/team/team_ceo_female_1787225300600.jpg',
     phone: '+1 (242) 555-0177',
@@ -45,7 +45,7 @@ const DEMO_USERS: Record<UserRole, User> = {
   customer: {
     id: 'usr_customer_1',
     name: 'John Renter',
-    email: 'customer@dreamsrent.com',
+    email: 'customer@bahamasluxurydrive.com',
     role: 'customer',
     avatar: '/images/user_image.jpg',
     phone: '+1 (242) 555-0182',

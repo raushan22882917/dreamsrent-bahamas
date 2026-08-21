@@ -229,7 +229,7 @@ export const Footer: React.FC = () => {
         <div className="pt-6 border-t border-gray-900/80 flex items-center justify-between relative">
           <div className="w-full text-center">
             <p className="text-xs text-[#666666]">
-              © 2026 Dreams Rent. All Rights Reserved.
+              © 2026 Bahamas Luxury Drive. All Rights Reserved.
             </p>
           </div>
 

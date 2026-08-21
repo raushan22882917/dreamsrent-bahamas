@@ -35,40 +35,40 @@ export async function POST(req: Request) {
 
     // Fallback for demo users if DB is temporarily unreachable
     const DEMO_ACCOUNTS: Record<string, any> = {
-      'admin@dreamsrent.com': {
+      'admin@bahamasluxurydrive.com': {
         id: 'usr_admin_1',
         name: 'Admin Administrator',
-        email: 'admin@dreamsrent.com',
+        email: 'admin@bahamasluxurydrive.com',
         role: 'admin',
         avatar: '/images/team/team_ceo_male_1787225259487.jpg',
         phone: '+1 (242) 555-0199',
         address: 'Nassau Main Office, Bahamas',
         driverLicense: 'DL-BAH-0001-ADM'
       },
-      'vendor@dreamsrent.com': {
+      'vendor@bahamasluxurydrive.com': {
         id: 'usr_vendor_1',
         name: 'Carlos Host (Vendor)',
-        email: 'vendor@dreamsrent.com',
+        email: 'vendor@bahamasluxurydrive.com',
         role: 'vendor',
         avatar: '/images/team/team_business_head_1787225318994.jpg',
         phone: '+1 (242) 555-0144',
         address: 'Paradise Island Hub, Bahamas',
         driverLicense: 'DL-BAH-0089-VND'
       },
-      'driver@dreamsrent.com': {
+      'driver@bahamasluxurydrive.com': {
         id: 'usr_driver_1',
         name: 'Marcus Chauffeur (Driver)',
-        email: 'driver@dreamsrent.com',
+        email: 'driver@bahamasluxurydrive.com',
         role: 'driver',
         avatar: '/images/team/team_ceo_female_1787225300600.jpg',
         phone: '+1 (242) 555-0188',
         address: 'Lynden Pindling Airport, Bahamas',
         driverLicense: 'DL-BAH-98442-EXP2028'
       },
-      'customer@dreamsrent.com': {
+      'customer@bahamasluxurydrive.com': {
         id: 'usr_customer_1',
         name: 'John Renter',
-        email: 'customer@dreamsrent.com',
+        email: 'customer@bahamasluxurydrive.com',
         role: 'customer',
         avatar: '/images/user_image.jpg',
         phone: '+1 (242) 555-0182',
