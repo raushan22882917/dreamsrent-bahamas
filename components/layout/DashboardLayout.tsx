@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { UserRole } from '../../types/rental';
 import { 
+  LayoutDashboard,
   Clock, 
   Calendar, 
   CalendarDays, 
@@ -60,45 +61,74 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
 
-  const sidebarSections = [
-    {
-      heading: 'BOOKINGS',
-      items: [
-        { label: 'Reservations', href: '/admin/bookings', icon: Clock },
-        { label: 'Bookings', href: user?.role === 'vendor' ? '/vendor/dashboard' : '/admin/bookings', icon: Calendar },
-        { label: 'Calendar', href: '/admin', icon: CalendarDays },
-      ]
-    },
-    {
-      heading: 'MANAGEMENT',
-      items: [
-        { label: 'Customers', href: '/admin', icon: Users },
-        { label: 'Drivers', href: '/driver/dashboard', icon: UserCheck },
-        { label: 'Locations', href: '/rental-grid', icon: MapPin },
-      ]
-    },
-    {
-      heading: 'RENTALS',
-      items: [
-        { label: 'Rental Fleet', href: user?.role === 'vendor' ? '/vendor/cars' : '/admin/cars', icon: Car },
-        { label: 'Brands', href: '/rental-grid', icon: Tag },
-        { label: 'Models', href: '/rental-grid', icon: Sliders },
-        { label: 'Colors', href: '/rental-grid', icon: Palette },
-        { label: 'Seats', href: '/rental-grid', icon: Armchair },
-        { label: 'Cylinders', href: '/rental-grid', icon: Cog },
-        { label: 'Doors', href: '/rental-grid', icon: DoorClosed },
-        { label: 'Features', href: '/rental-grid', icon: Sparkles },
-        { label: 'Safety Features', href: '/rental-grid', icon: ShieldCheck },
-      ]
-    },
-    {
-      heading: 'FINANCE & SETTINGS',
-      items: [
-        { label: 'Earnings / Payments', href: user?.role === 'vendor' ? '/vendor/payments' : '/payments', icon: DollarSign },
-        { label: 'Account Settings', href: user?.role === 'vendor' ? '/vendor/settings' : '/settings', icon: Settings },
-      ]
+  const getSidebarSections = () => {
+    if (user?.role === 'vendor') {
+      return [
+        {
+          heading: 'DASHBOARD',
+          items: [
+            { label: 'Overview', href: '/vendor/dashboard', icon: LayoutDashboard },
+            { label: 'My Bookings', href: '/vendor/bookings', icon: Calendar },
+          ]
+        },
+        {
+          heading: 'FLEET MANAGEMENT',
+          items: [
+            { label: 'My Vehicles', href: '/vendor/cars', icon: Car },
+            { label: 'Fleet Inventory', href: '/rental-grid', icon: Tag },
+          ]
+        },
+        {
+          heading: 'FINANCE & ACCOUNT',
+          items: [
+            { label: 'Earnings & Payouts', href: '/vendor/payments', icon: DollarSign },
+            { label: 'Vendor Profile', href: '/vendor/settings', icon: Settings },
+          ]
+        }
+      ];
     }
-  ];
+
+    if (user?.role === 'driver') {
+      return [
+        {
+          heading: 'DISPATCH',
+          items: [
+            { label: 'Trips & Schedule', href: '/driver/dashboard', icon: Navigation },
+            { label: 'Fleet Hub', href: '/rental-grid', icon: MapPin },
+            { label: 'My Profile', href: '/settings', icon: Settings },
+          ]
+        }
+      ];
+    }
+
+    // Default Admin & Executive Management
+    return [
+      {
+        heading: 'EXECUTIVE OVERVIEW',
+        items: [
+          { label: 'Admin Dashboard', href: '/admin', icon: LayoutDashboard },
+          { label: 'Reservations & Bookings', href: '/admin/bookings', icon: Calendar },
+        ]
+      },
+      {
+        heading: 'FLEET & OPERATIONS',
+        items: [
+          { label: 'Manage Vehicles', href: '/admin/cars', icon: Car },
+          { label: 'Driver Dispatch', href: '/driver/dashboard', icon: UserCheck },
+          { label: 'Public Fleet Catalog', href: '/rental-grid', icon: MapPin },
+        ]
+      },
+      {
+        heading: 'FINANCE & SETTINGS',
+        items: [
+          { label: 'Payments & Revenue', href: '/payments', icon: DollarSign },
+          { label: 'System Settings', href: '/settings', icon: Settings },
+        ]
+      }
+    ];
+  };
+
+  const sidebarSections = getSidebarSections();
 
   const handleQuickRoleSwitch = (role: UserRole) => {
     switchRole(role);
