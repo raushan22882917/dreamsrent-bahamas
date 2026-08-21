@@ -1,721 +1,630 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useRental } from '../context/RentalContext';
 import { VEHICLE_CATEGORIES, ALL_LOCATIONS } from '../data/vehicles';
+import { HeroSearch } from '../components/home/HeroSearch';
 import { VehicleCard } from '../components/ui/VehicleCard';
 import { 
-  ArrowRight,
-  ChevronRight,
-  ShieldCheck,
-  Award,
-  Users,
-  Car,
-  CheckCircle2,
-  PhoneCall,
-  Calendar,
-  MapPin,
-  Sparkles,
-  Zap,
-  Clock,
-  Star,
-  Fuel,
-  Gauge,
-  Sliders,
-  Check,
-  ChevronDown,
-  HelpCircle,
-  Compass,
-  KeyRound,
-  DollarSign
+  ArrowRight, 
+  ChevronRight, 
+  ShieldCheck, 
+  Award, 
+  Users, 
+  Car, 
+  CheckCircle2, 
+  PhoneCall, 
+  Star, 
+  Sparkles, 
+  MapPin, 
+  Zap, 
+  Clock, 
+  Compass, 
+  Key, 
+  Check, 
+  Gauge, 
+  Flame,
+  Plane,
+  HeartHandshake
 } from 'lucide-react';
 
-const BAHAMAS_HUBS = [
-  { name: 'Nassau Airport (NAS)', label: 'Lynden Pindling Intl', icon: '✈️' },
-  { name: 'Paradise Island Hub', label: 'Atlantis & Marina', icon: '🏝️' },
-  { name: 'Cable Beach Resort Hub', label: 'Baha Mar Area', icon: '🏖️' },
-  { name: 'Downtown Nassau Harbor', label: 'Cruise Port Terminal', icon: '⚓' },
-];
-
-const SPOTLIGHT_HERO_CARS = [
-  {
-    id: 'car-1',
-    title: 'Ferrari 458 MM Speciale',
-    slug: 'ferrari-458-mm-speciale',
-    brand: 'Ferrari',
-    category: 'Sport',
-    price: 160,
-    hp: '597 HP',
-    speed: '3.0s 0-60',
-    img: '/images/cars/car-01.jpg',
-    rating: 5.0,
-    reviews: 28
-  },
-  {
-    id: 'car-2',
-    title: '2018 Chevrolet Camaro',
-    slug: '2018-chevrolet-camaro',
-    brand: 'Chevrolet',
-    category: 'Convertible',
-    price: 100,
-    hp: '455 HP',
-    speed: '4.0s 0-60',
-    img: '/images/cars/car-02.jpg',
-    rating: 4.9,
-    reviews: 34
-  },
-  {
-    id: 'car-3',
-    title: 'Tesla Model 3 Sport',
-    slug: 'tesla-camry-se-350',
-    brand: 'Tesla',
-    category: 'Sedan',
-    price: 120,
-    hp: '450 HP',
-    speed: '3.1s 0-60',
-    img: '/images/cars/car-03.jpg',
-    rating: 4.9,
-    reviews: 19
-  }
-];
-
-const FAQS = [
-  {
-    q: 'What documents are required to rent a vehicle in the Bahamas?',
-    a: 'You will need a valid driver\'s license from your home country or an International Driving Permit (IDP), a valid passport, and a credit or debit card for the security deposit.'
-  },
-  {
-    q: 'Can I get airport pickup and drop-off at Nassau (NAS)?',
-    a: 'Yes! We provide complimentary VIP airport delivery at Lynden Pindling International Airport (NAS). Our representative will meet you right outside arrivals with your keys ready.'
-  },
-  {
-    q: 'Is insurance included in the daily rental rate?',
-    a: 'All our rentals come with basic third-party liability insurance. Comprehensive Collision Damage Waiver (CDW) and zero-deductible premium protection can be selected during checkout.'
-  },
-  {
-    q: 'Can I drive the vehicle across different Bahamas islands?',
-    a: 'Vehicles rented on New Providence / Nassau can be driven freely anywhere on the island, including Paradise Island and Cable Beach. Inter-island ferry transport requires advance authorization.'
-  }
-];
-
 export default function HomePage() {
-  const router = useRouter();
   const { vehicles } = useRental();
-  
-  // Hero Search State
-  const [serviceType, setServiceType] = useState<'self_drive' | 'chauffeur' | 'airport'>('self_drive');
-  const [selectedLocation, setSelectedLocation] = useState('Nassau Airport (NAS)');
-  const [pickupDate, setPickupDate] = useState('2026-08-25');
-  const [returnDate, setReturnDate] = useState('2026-08-29');
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  
-  // Spotlight Car Index
-  const [spotlightIndex, setSpotlightIndex] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [featuredCarIndex, setFeaturedCarIndex] = useState(0);
 
-  // Active Category Filter for Fleet Showroom
-  const [activeFleetCategory, setActiveFleetCategory] = useState('All');
-  
-  // FAQ Open State
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  // Top 5 Highlighted Supercars for the Interactive 3D Showcase
+  const spotlightVehicles = vehicles.slice(0, 5);
+  const currentSpotlight = spotlightVehicles[featuredCarIndex] || vehicles[0];
 
-  const activeSpotlightCar = SPOTLIGHT_HERO_CARS[spotlightIndex];
+  // Auto-rotate spotlight car every 6 seconds unless user manually interacts
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setFeaturedCarIndex((prev) => (prev + 1) % (spotlightVehicles.length || 1));
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [spotlightVehicles.length]);
 
-  const handleHeroSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const query = new URLSearchParams();
-    if (selectedLocation) query.set('location', selectedLocation);
-    if (selectedCategory && selectedCategory !== 'All') query.set('category', selectedCategory);
-    router.push(`/rental-grid?${query.toString()}`);
-  };
+  // Filter vehicles by category
+  const filteredVehicles = selectedCategory === 'All'
+    ? vehicles
+    : vehicles.filter(v => v.category.toLowerCase() === selectedCategory.toLowerCase());
 
-  // Filter vehicles for showcase
-  const displayedVehicles = activeFleetCategory === 'All'
-    ? vehicles.slice(0, 6)
-    : vehicles.filter(v => v.category.toLowerCase().includes(activeFleetCategory.toLowerCase()) || activeFleetCategory.toLowerCase().includes(v.category.toLowerCase())).slice(0, 6);
+  const displayedVehicles = filteredVehicles.slice(0, 8);
 
   return (
-    <div className="min-h-screen bg-white text-[#201F1D] font-sans selection:bg-[#FFA633]/30">
+    <div className="min-h-screen bg-[#FBFBFB] text-[#201F1D] selection:bg-[#FFA633] selection:text-white">
       
-      {/* ========================================================
-          1. NEW FORMAT HERO: EXECUTIVE SPLIT VISUALIZER
-      ======================================================== */}
-      <section className="relative bg-gradient-to-b from-[#FDFBF7] via-[#F8F9FA] to-white pt-8 pb-16 lg:py-20 overflow-hidden border-b border-[#EAEDF0]">
+      {/* ══════════════════════════════════════════════════════════════════════
+          1. CINEMATIC LUXURY 3D HERO SECTION
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="relative min-h-[640px] lg:min-h-[720px] bg-[#121316] overflow-hidden flex items-center justify-center py-16 sm:py-20 lg:py-24">
         
-        {/* Subtle Background Accent Orbs */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#FFA633]/10 rounded-full blur-3xl pointer-events-none -mr-40 -mt-40"></div>
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#127384]/10 rounded-full blur-3xl pointer-events-none -ml-20 -mb-20"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Ambient Dark Coastal Gradient & Glow Background */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+          {/* Subtle animated light orbs */}
+          <div className="absolute -top-40 -left-40 w-[600px] h-[600px] bg-gradient-to-br from-[#FFA633]/20 via-[#FFA633]/5 to-transparent rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-40 -right-40 w-[600px] h-[600px] bg-gradient-to-tl from-amber-500/15 via-orange-600/5 to-transparent rounded-full blur-3xl"></div>
           
-          {/* Top Live Ticker */}
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
-            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>24 Luxury Vehicles Ready for Instant Nassau Delivery</span>
-            </div>
-            <div className="hidden sm:flex items-center space-x-6 text-xs text-[#878A99] font-medium">
-              <span className="flex items-center"><Check className="w-3.5 h-3.5 text-[#FFA633] mr-1" /> Free Airport Meet & Greet</span>
-              <span className="flex items-center"><Check className="w-3.5 h-3.5 text-[#FFA633] mr-1" /> Free Cancellation (24h)</span>
-              <span className="flex items-center"><Check className="w-3.5 h-3.5 text-[#FFA633] mr-1" /> 0% Hidden Fees</span>
-            </div>
-          </div>
+          {/* Subtle Grid overlay for high-tech automotive feel */}
+          <div 
+            className="absolute inset-0 opacity-[0.04]"
+            style={{
+              backgroundImage: 'linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)',
+              backgroundSize: '40px 40px'
+            }}
+          ></div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          {/* Fallback image layer */}
+          <div 
+            className="absolute inset-0 opacity-15 bg-cover bg-center mix-blend-luminosity"
+            style={{ backgroundImage: "url('/images/banner.jpg')" }}
+          ></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
             
-            {/* Left Column: Bold Headline & Interactive Booking Engine */}
-            <div className="lg:col-span-7 space-y-6">
+            {/* Left Column: Headline & VIP Offer */}
+            <div className="lg:col-span-6 space-y-6 text-white text-center lg:text-left">
               
-              <div className="space-y-3">
-                <span className="text-xs font-bold tracking-widest text-[#FFA633] uppercase flex items-center">
-                  <Sparkles className="w-3.5 h-3.5 mr-1.5" /> DreamsRent Bahamas VIP Fleet
-                </span>
-                <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-black text-[#201F1D] tracking-tight leading-[1.1]">
-                  Drive Your Dream in <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFA633] to-[#e68a19]">
-                    Bahamas Paradise
-                  </span>
-                </h1>
-                <p className="text-sm sm:text-base text-[#6B7280] leading-relaxed max-w-xl font-normal">
-                  Experience Nassau, Paradise Island & Cable Beach in high-performance sports cars, luxury convertibles, and executive SUVs.
-                </p>
+              {/* Trust Pill */}
+              <div className="inline-flex items-center space-x-2.5 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-semibold text-[#FFA633] shadow-lg">
+                <span className="w-2 h-2 rounded-full bg-[#FFA633] animate-ping"></span>
+                <span>BAHAMAS #1 PREMIER LUXURY & SUPERCAR RENTAL</span>
               </div>
 
-              {/* Service Tab Selector */}
-              <div className="inline-flex p-1 bg-gray-100/90 rounded-2xl border border-gray-200 shadow-inner">
-                <button
-                  type="button"
-                  onClick={() => setServiceType('self_drive')}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                    serviceType === 'self_drive' 
-                      ? 'bg-white text-[#201F1D] shadow-sm' 
-                      : 'text-gray-500 hover:text-gray-900'
-                  }`}
-                >
-                  🚗 Self-Drive Rental
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setServiceType('chauffeur')}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                    serviceType === 'chauffeur' 
-                      ? 'bg-white text-[#201F1D] shadow-sm' 
-                      : 'text-gray-500 hover:text-gray-900'
-                  }`}
-                >
-                  🎩 VIP Chauffeur
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setServiceType('airport')}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                    serviceType === 'airport' 
-                      ? 'bg-white text-[#201F1D] shadow-sm' 
-                      : 'text-gray-500 hover:text-gray-900'
-                  }`}
-                >
-                  ✈️ Airport Express
-                </button>
-              </div>
+              {/* Main Headline */}
+              <h1 className="text-3xl sm:text-5xl lg:text-[54px] font-black tracking-tight text-white leading-[1.12]">
+                Drive The <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFA633] via-amber-400 to-orange-400">Extraordinary</span> Across Nassau.
+              </h1>
 
-              {/* Instant Search Bar Card */}
-              <form 
-                onSubmit={handleHeroSearch}
-                className="bg-white rounded-3xl p-5 sm:p-6 border border-[#EAEDF0] shadow-xl space-y-4"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
-                  
-                  {/* Pick-Up Location */}
-                  <div className="space-y-1">
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-500 flex items-center">
-                      <MapPin className="w-3 h-3 text-[#FFA633] mr-1" /> Pick-Up Hub
-                    </label>
-                    <select
-                      value={selectedLocation}
-                      onChange={(e) => setSelectedLocation(e.target.value)}
-                      className="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:ring-2 focus:ring-[#FFA633] focus:outline-none"
-                    >
-                      <option value="Nassau Airport (NAS)">Nassau Airport (NAS)</option>
-                      <option value="Paradise Island Hub">Paradise Island Hub</option>
-                      <option value="Cable Beach Resort Hub">Cable Beach Resort Hub</option>
-                      <option value="Downtown Nassau Harbor">Downtown Nassau Harbor</option>
-                    </select>
-                  </div>
-
-                  {/* Vehicle Category */}
-                  <div className="space-y-1">
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-500 flex items-center">
-                      <Car className="w-3 h-3 text-[#FFA633] mr-1" /> Car Type
-                    </label>
-                    <select
-                      value={selectedCategory}
-                      onChange={(e) => setSelectedCategory(e.target.value)}
-                      className="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:ring-2 focus:ring-[#FFA633] focus:outline-none"
-                    >
-                      {VEHICLE_CATEGORIES.map((cat) => (
-                        <option key={cat} value={cat}>{cat} Vehicles</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Dates Range */}
-                  <div className="space-y-1 sm:col-span-2 md:col-span-1">
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-500 flex items-center">
-                      <Calendar className="w-3 h-3 text-[#FFA633] mr-1" /> Rental Period
-                    </label>
-                    <div className="flex items-center space-x-1.5">
-                      <input
-                        type="date"
-                        value={pickupDate}
-                        onChange={(e) => setPickupDate(e.target.value)}
-                        className="w-1/2 px-2 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-[11px] font-bold text-gray-800 focus:ring-2 focus:ring-[#FFA633] focus:outline-none"
-                      />
-                      <input
-                        type="date"
-                        value={returnDate}
-                        onChange={(e) => setReturnDate(e.target.value)}
-                        className="w-1/2 px-2 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-[11px] font-bold text-gray-800 focus:ring-2 focus:ring-[#FFA633] focus:outline-none"
-                      />
-                    </div>
-                  </div>
-
-                </div>
-
-                {/* Search Submit Bar */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-2 border-t border-gray-100 gap-3">
-                  <div className="flex items-center space-x-2 text-xs text-gray-500">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span>Best Price Guaranteed • Instant Confirmation</span>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="px-6 py-3 bg-[#FFA633] hover:bg-[#e5952e] text-white text-xs font-black rounded-xl shadow-md hover:shadow-lg transition-all active:scale-[0.99] flex items-center justify-center space-x-2"
-                  >
-                    <span>Search Available Cars</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
-
-              </form>
-
-            </div>
-
-            {/* Right Column: Interactive Featured Car Spotlight */}
-            <div className="lg:col-span-5 relative">
-              
-              <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#EAEDF0] shadow-xl relative overflow-hidden group">
-                
-                {/* Top Badge */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-1.5 bg-orange-50 text-[#FFA633] px-3 py-1 rounded-full text-xs font-black">
-                    <Star className="w-3.5 h-3.5 fill-[#FFA633]" />
-                    <span>Featured Spotlight</span>
-                  </div>
-                  <span className="text-xs font-bold text-gray-400">
-                    {spotlightIndex + 1} of {SPOTLIGHT_HERO_CARS.length}
-                  </span>
-                </div>
-
-                {/* Car Image with smooth transition */}
-                <div className="relative h-56 sm:h-64 flex items-center justify-center my-2">
-                  <img
-                    src={activeSpotlightCar.img}
-                    alt={activeSpotlightCar.title}
-                    className="max-h-full max-w-full object-contain drop-shadow-2xl transition-all duration-500 group-hover:scale-105"
-                  />
-                </div>
-
-                {/* Car Title & Price */}
-                <div className="space-y-3 pt-2">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <span className="text-[10px] uppercase font-bold text-gray-400">{activeSpotlightCar.brand} • {activeSpotlightCar.category}</span>
-                      <h3 className="text-xl font-black text-[#201F1D] leading-tight">{activeSpotlightCar.title}</h3>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-2xl font-black text-[#FFA633]">${activeSpotlightCar.price}</span>
-                      <span className="text-[10px] text-gray-400 block font-bold">/ day</span>
-                    </div>
-                  </div>
-
-                  {/* Engine Specs Badges */}
-                  <div className="grid grid-cols-3 gap-2 py-2 border-y border-gray-100 text-center text-xs">
-                    <div className="bg-gray-50 p-2 rounded-xl">
-                      <span className="text-[10px] text-gray-400 block font-semibold">Power</span>
-                      <span className="font-bold text-gray-800">{activeSpotlightCar.hp}</span>
-                    </div>
-                    <div className="bg-gray-50 p-2 rounded-xl">
-                      <span className="text-[10px] text-gray-400 block font-semibold">0-60 mph</span>
-                      <span className="font-bold text-gray-800">{activeSpotlightCar.speed}</span>
-                    </div>
-                    <div className="bg-gray-50 p-2 rounded-xl">
-                      <span className="text-[10px] text-gray-400 block font-semibold">Rating</span>
-                      <span className="font-bold text-gray-800">{activeSpotlightCar.rating} ★</span>
-                    </div>
-                  </div>
-
-                  {/* Action & Switcher Controls */}
-                  <div className="flex items-center space-x-3 pt-1">
-                    <Link
-                      href={`/rental/${activeSpotlightCar.slug}`}
-                      className="flex-1 py-3 bg-[#1B1B1B] hover:bg-black text-white text-xs font-bold rounded-xl text-center shadow-sm transition-colors flex items-center justify-center space-x-1.5"
-                    >
-                      <span>Reserve This Car</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
-
-                    {/* Next Car Toggle */}
-                    <div className="flex items-center space-x-1">
-                      {SPOTLIGHT_HERO_CARS.map((_, idx) => (
-                        <button
-                          key={idx}
-                          type="button"
-                          onClick={() => setSpotlightIndex(idx)}
-                          className={`w-3 h-3 rounded-full transition-all ${
-                            spotlightIndex === idx 
-                              ? 'bg-[#FFA633] w-6' 
-                              : 'bg-gray-200 hover:bg-gray-300'
-                          }`}
-                          title={`View car ${idx + 1}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* ========================================================
-          2. BAHAMAS ISLAND PICKUP HUBS STRIP
-      ======================================================== */}
-      <section className="bg-white py-8 border-b border-[#EAEDF0]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {BAHAMAS_HUBS.map((hub) => (
-              <Link
-                key={hub.name}
-                href={`/rental-grid?location=${encodeURIComponent(hub.name)}`}
-                className="flex items-center space-x-3 p-3.5 rounded-2xl bg-gray-50 hover:bg-orange-50/60 border border-gray-100 hover:border-orange-200 transition-all group"
-              >
-                <div className="text-2xl p-2 rounded-xl bg-white shadow-xs group-hover:scale-110 transition-transform">
-                  {hub.icon}
-                </div>
-                <div>
-                  <h4 className="text-xs font-black text-[#201F1D] group-hover:text-[#FFA633] transition-colors leading-tight">
-                    {hub.name}
-                  </h4>
-                  <p className="text-[10px] text-[#878A99] font-medium mt-0.5">{hub.label}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================
-          3. FEATURED FLEET SHOWROOM (NEW TABBED FORMAT)
-      ======================================================== */}
-      <section className="py-20 bg-[#F8F9FA]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Section Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-[#FFA633] block mb-1">
-                Luxury & Performance Catalog
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-black text-[#201F1D] tracking-tight">
-                Explore Available Fleet
-              </h2>
-              <p className="text-xs sm:text-sm text-[#7A7A7A] mt-1 max-w-lg">
-                24 fully serviced vehicles in stock. Clean interior guaranteed with multi-point safety check.
+              {/* Subtitle */}
+              <p className="text-sm sm:text-base text-gray-300 font-normal leading-relaxed max-w-xl mx-auto lg:mx-0">
+                Experience Paradise Island, Cable Beach, and Nassau in luxury. Enjoy VIP Airport terminal delivery at Lynden Pindling (NAS), zero security deposit options, and 24 verified late-model exotics.
               </p>
+
+              {/* Highlights List */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-1 text-xs text-gray-200">
+                <div className="flex items-center space-x-2 bg-white/5 backdrop-blur-sm px-3 py-2 rounded-xl border border-white/10">
+                  <Plane className="w-4 h-4 text-[#FFA633]" />
+                  <span>Free NAS Airport Drop</span>
+                </div>
+                <div className="flex items-center space-x-2 bg-white/5 backdrop-blur-sm px-3 py-2 rounded-xl border border-white/10">
+                  <ShieldCheck className="w-4 h-4 text-[#FFA633]" />
+                  <span>Full Island Insurance</span>
+                </div>
+                <div className="flex items-center space-x-2 bg-white/5 backdrop-blur-sm px-3 py-2 rounded-xl border border-white/10">
+                  <Zap className="w-4 h-4 text-[#FFA633]" />
+                  <span>Instant Confirmation</span>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-3">
+                <Link 
+                  href="/rental-grid"
+                  className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-8 py-4 bg-[#FFA633] hover:bg-[#e5952e] text-white font-black text-sm rounded-2xl shadow-xl shadow-orange-500/25 transition-all duration-300 transform hover:-translate-y-0.5"
+                >
+                  <span>Explore 24 Supercars</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+
+                <a 
+                  href="tel:+12425550199"
+                  className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-4 bg-white/10 hover:bg-white/20 text-white font-bold text-sm rounded-2xl border border-white/20 backdrop-blur-md transition-all duration-300"
+                >
+                  <PhoneCall className="w-4 h-4 text-[#FFA633]" />
+                  <span>VIP Concierge</span>
+                </a>
+              </div>
+
+              {/* Renter Social Proof */}
+              <div className="pt-2 flex items-center justify-center lg:justify-start space-x-4">
+                <div className="flex -space-x-2">
+                  <img src="/images/team/team_ceo_male_1787225259487.jpg" alt="Renter" className="w-8 h-8 rounded-full border-2 border-[#121316] object-cover" />
+                  <img src="/images/team/team_business_head_1787225318994.jpg" alt="Renter" className="w-8 h-8 rounded-full border-2 border-[#121316] object-cover" />
+                  <img src="/images/team/team_ceo_female_1787225300600.jpg" alt="Renter" className="w-8 h-8 rounded-full border-2 border-[#121316] object-cover" />
+                </div>
+                <div className="text-left text-xs">
+                  <div className="flex items-center text-amber-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-current" />
+                    ))}
+                    <span className="ml-1.5 font-bold text-white">4.98 / 5.0</span>
+                  </div>
+                  <span className="text-[11px] text-gray-400">Trusted by 4,850+ island travelers</span>
+                </div>
+              </div>
+
             </div>
 
-            <Link
-              href="/rental-grid"
-              className="inline-flex items-center space-x-2 text-xs font-bold text-[#FFA633] hover:underline"
-            >
-              <span>View All 24 Vehicles</span>
-              <ChevronRight className="w-4 h-4" />
-            </Link>
+            {/* Right Column: Interactive 3D Supercar Showcase Spotlight */}
+            <div className="lg:col-span-6 relative">
+              
+              <div className="relative bg-white/5 backdrop-blur-xl border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl overflow-hidden group">
+                
+                {/* Floating Top Badge */}
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-3 py-1 rounded-full bg-[#FFA633]/20 border border-[#FFA633]/40 text-[#FFA633] text-[11px] font-bold uppercase tracking-wider">
+                    {currentSpotlight?.category} Edition
+                  </span>
+                  <div className="flex items-center space-x-1 text-white">
+                    <span className="text-xs text-gray-400">Daily Rate:</span>
+                    <span className="text-xl font-black text-[#FFA633]">${currentSpotlight?.pricePerDay}</span>
+                    <span className="text-[10px] text-gray-400">/day</span>
+                  </div>
+                </div>
+
+                {/* Car Title & Location */}
+                <div className="text-left mb-4">
+                  <h3 className="text-2xl font-black text-white">{currentSpotlight?.title}</h3>
+                  <p className="text-xs text-gray-300 flex items-center mt-1">
+                    <MapPin className="w-3.5 h-3.5 text-[#FFA633] mr-1" />
+                    {currentSpotlight?.location || 'Nassau Airport (NAS) Hub'}
+                  </p>
+                </div>
+
+                {/* Big Vehicle Photo with cinematic hover glow */}
+                <div className="relative h-56 sm:h-72 w-full flex items-center justify-center my-4 overflow-hidden rounded-2xl bg-gradient-to-b from-black/20 to-black/60">
+                  <img 
+                    src={currentSpotlight?.featuredImage || '/images/car-right.png'} 
+                    alt={currentSpotlight?.title} 
+                    className="w-full h-full object-cover rounded-2xl transform group-hover:scale-105 transition-transform duration-700 shadow-2xl"
+                  />
+                  
+                  {/* Floating Specs Badges on top of image */}
+                  <div className="absolute bottom-3 left-3 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-[11px] text-white flex items-center space-x-2">
+                    <Gauge className="w-3.5 h-3.5 text-[#FFA633]" />
+                    <span>{currentSpotlight?.specs?.transmission || 'Automatic'}</span>
+                  </div>
+
+                  <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-[11px] text-white flex items-center space-x-2">
+                    <Users className="w-3.5 h-3.5 text-[#FFA633]" />
+                    <span>{currentSpotlight?.specs?.seats || 5} Seats</span>
+                  </div>
+                </div>
+
+                {/* Spotlight Car Selector Thumbnails */}
+                <div className="pt-2">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 text-left mb-2">
+                    Select Featured Supercar:
+                  </p>
+                  <div className="grid grid-cols-5 gap-2">
+                    {spotlightVehicles.map((car, idx) => (
+                      <button
+                        key={car.id}
+                        onClick={() => setFeaturedCarIndex(idx)}
+                        className={`relative rounded-xl overflow-hidden border-2 transition-all p-0.5 ${
+                          featuredCarIndex === idx 
+                            ? 'border-[#FFA633] scale-105 shadow-md shadow-orange-500/30' 
+                            : 'border-white/10 opacity-60 hover:opacity-100'
+                        }`}
+                      >
+                        <img src={car.featuredImage} alt={car.title} className="w-full h-10 object-cover rounded-lg" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Direct Reserve Button for Featured Car */}
+                <div className="mt-5 pt-4 border-t border-white/10 flex items-center justify-between">
+                  <span className="text-xs text-gray-400 font-medium">Deposit: ${currentSpotlight?.deposit} (Refundable)</span>
+                  <Link
+                    href={`/rental/${currentSpotlight?.slug}`}
+                    className="px-5 py-2.5 bg-white hover:bg-[#FFA633] text-[#121316] hover:text-white text-xs font-extrabold rounded-xl transition-all duration-300 flex items-center space-x-1.5"
+                  >
+                    <span>Instant Reserve</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          2. FLOATING SMART BOOKING BAR
+      ══════════════════════════════════════════════════════════════════════ */}
+      <div className="px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-10 relative z-30">
+        <HeroSearch />
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          3. SIGNATURE BAHAMAS FLEET (INTERACTIVE TABS)
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+          <div>
+            <div className="inline-flex items-center space-x-2 text-xs font-bold text-[#FFA633] uppercase tracking-wider mb-2">
+              <Sparkles className="w-4 h-4" />
+              <span>Late-Model Exotics & Convertibles</span>
+            </div>
+            <h2 className="text-2xl sm:text-4xl font-black text-[#201F1D] tracking-tight">
+              Explore Our Island Fleet
+            </h2>
+            <p className="text-xs sm:text-sm text-[#878A99] mt-1 max-w-lg">
+              All 24 luxury vehicles are company-owned, immaculately maintained, and ready for instant delivery across the Bahamas.
+            </p>
           </div>
 
-          {/* Interactive Category Filter Pills */}
-          <div className="flex items-center space-x-2 overflow-x-auto pb-4 mb-8 no-scrollbar">
-            {['All', 'Sport', 'Convertible', 'Luxury', 'SUV / 4x4', 'Sedan'].map((cat) => (
+          {/* Category Filter Pills */}
+          <div className="flex items-center space-x-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
+            {['All', 'Sport', 'Convertible', 'Sedan', 'SUV', 'Luxury'].map((cat) => (
               <button
                 key={cat}
-                onClick={() => setActiveFleetCategory(cat)}
-                className={`px-5 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex items-center space-x-1.5 ${
-                  activeFleetCategory === cat
-                    ? 'bg-[#FFA633] text-white shadow-md'
-                    : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+                  selectedCategory === cat
+                    ? 'bg-[#FFA633] text-white shadow-md shadow-orange-500/20'
+                    : 'bg-white text-gray-600 hover:bg-gray-100 border border-[#EAEDF0]'
                 }`}
               >
-                <span>{cat}</span>
+                {cat === 'All' ? 'All Fleet (24)' : cat}
               </button>
             ))}
           </div>
-
-          {/* 3-Column Vehicle Card Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {displayedVehicles.map((vehicle) => (
-              <VehicleCard key={vehicle.id} vehicle={vehicle} viewMode="grid" />
-            ))}
-          </div>
-
-          {/* View Full Catalog Button */}
-          <div className="text-center mt-12">
-            <Link
-              href="/rental-grid"
-              className="inline-flex items-center space-x-2 px-8 py-4 bg-[#1B1B1B] hover:bg-black text-white text-xs font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
-            >
-              <span>Explore All Fleet & Real-Time Availability</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-
         </div>
+
+        {/* Vehicle Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {displayedVehicles.map((vehicle) => (
+            <VehicleCard key={vehicle.id} vehicle={vehicle} />
+          ))}
+        </div>
+
+        {/* View All Button */}
+        <div className="text-center mt-12">
+          <Link
+            href="/rental-grid"
+            className="inline-flex items-center space-x-2 px-8 py-4 bg-[#201F1D] hover:bg-[#FFA633] text-white text-xs font-black rounded-2xl shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+          >
+            <span>Browse Full 24-Car Catalog</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+
       </section>
 
-      {/* ========================================================
-          4. 4 VALUE PILLARS & TRUST METRICS (INTERACTIVE FORMAT)
-      ======================================================== */}
-      <section className="py-20 bg-white border-b border-[#EAEDF0]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-2">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#FFA633]">
-              The DreamsRent Standard
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-[#201F1D] tracking-tight">
-              Why Discerning Travelers Choose Us
-            </h2>
-            <p className="text-xs sm:text-sm text-[#7A7A7A]">
-              We deliver more than just cars — we provide effortless island mobility and VIP hospitality.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            
-            <div className="bg-[#F8F9FA] rounded-3xl p-6 border border-[#EAEDF0] hover:border-orange-200 transition-all space-y-3 group hover:shadow-md">
-              <div className="w-12 h-12 rounded-2xl bg-orange-100 text-[#FFA633] flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Zap className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-bold text-[#201F1D]">15-Min Airport Delivery</h3>
-              <p className="text-xs text-[#7A7A7A] leading-relaxed">
-                Step right off your plane at Lynden Pindling (NAS) and drive away immediately without waiting in taxi lines.
-              </p>
-            </div>
-
-            <div className="bg-[#F8F9FA] rounded-3xl p-6 border border-[#EAEDF0] hover:border-orange-200 transition-all space-y-3 group hover:shadow-md">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-bold text-[#201F1D]">100% Insured & Inspected</h3>
-              <p className="text-xs text-[#7A7A7A] leading-relaxed">
-                Every vehicle undergoes a 45-point mechanical and safety test with comprehensive insurance protection.
-              </p>
-            </div>
-
-            <div className="bg-[#F8F9FA] rounded-3xl p-6 border border-[#EAEDF0] hover:border-orange-200 transition-all space-y-3 group hover:shadow-md">
-              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <DollarSign className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-bold text-[#201F1D]">Transparent Pricing</h3>
-              <p className="text-xs text-[#7A7A7A] leading-relaxed">
-                All daily rates and deposit amounts are clearly detailed upfront with zero surprise desk fees.
-              </p>
-            </div>
-
-            <div className="bg-[#F8F9FA] rounded-3xl p-6 border border-[#EAEDF0] hover:border-orange-200 transition-all space-y-3 group hover:shadow-md">
-              <div className="w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <PhoneCall className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-bold text-[#201F1D]">24/7 Island Concierge</h3>
-              <p className="text-xs text-[#7A7A7A] leading-relaxed">
-                Live customer support, emergency roadside dispatch, and local island recommendations 24 hours a day.
-              </p>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* ========================================================
-          5. BAHAMAS SCENIC DRIVE DESTINATIONS
-      ======================================================== */}
-      <section className="py-20 bg-[#FDFBF7]">
+      {/* ══════════════════════════════════════════════════════════════════════
+          4. VIP BAHAMIAN PERKS (WHY RENT WITH DREAMSSRENT)
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="bg-white py-20 border-y border-[#EAEDF0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-2xl mx-auto mb-14 space-y-2">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#FFA633]">
-              Island Exploration
+            <span className="text-xs font-bold text-[#FFA633] uppercase tracking-wider">
+              The DreamsRent Standard
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-[#201F1D] tracking-tight">
-              Top Bahamas Scenic Drives
+            <h2 className="text-2xl sm:text-4xl font-black text-[#201F1D] tracking-tight">
+              Why Discerning Travelers Choose Us
             </h2>
-            <p className="text-xs sm:text-sm text-[#7A7A7A]">
-              Recommended routes for unforgettable coastal memories with your DreamsRent convertible or SUV.
+            <p className="text-xs sm:text-sm text-[#878A99]">
+              Designed from the ground up for frictionless luxury rentals throughout Nassau & Paradise Island.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             
-            <div className="bg-white rounded-3xl overflow-hidden border border-[#EAEDF0] shadow-sm group">
-              <div className="h-48 overflow-hidden relative">
-                <img 
-                  src="/images/cars/car-02.jpg" 
-                  alt="Paradise Island Loop" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                />
-                <span className="absolute bottom-3 left-3 px-3 py-1 bg-black/70 backdrop-blur-md text-white text-[11px] font-bold rounded-lg">
-                  12 Miles • Coastal Views
-                </span>
+            {/* Feature 1 */}
+            <div className="bg-[#F8F9FA] p-7 rounded-3xl border border-[#EAEDF0] hover:border-[#FFA633]/50 transition-all duration-300 hover:shadow-xl group space-y-4">
+              <div className="w-13 h-13 rounded-2xl bg-orange-50 text-[#FFA633] flex items-center justify-center group-hover:bg-[#FFA633] group-hover:text-white transition-colors duration-300">
+                <Plane className="w-6 h-6" />
               </div>
-              <div className="p-6 space-y-2">
-                <h3 className="text-base font-bold text-[#201F1D]">Paradise Island & Marina Drive</h3>
-                <p className="text-xs text-[#7A7A7A] leading-relaxed">
-                  Cruise over the Sidney Poitier Bridge to Atlantis, Versailles Gardens, and Ocean Club Estates.
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-3xl overflow-hidden border border-[#EAEDF0] shadow-sm group">
-              <div className="h-48 overflow-hidden relative">
-                <img 
-                  src="/images/cars/car-01.jpg" 
-                  alt="West Bay Street" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                />
-                <span className="absolute bottom-3 left-3 px-3 py-1 bg-black/70 backdrop-blur-md text-white text-[11px] font-bold rounded-lg">
-                  18 Miles • Sunset Highway
-                </span>
-              </div>
-              <div className="p-6 space-y-2">
-                <h3 className="text-base font-bold text-[#201F1D]">West Bay Street & Clifton Heritage</h3>
-                <p className="text-xs text-[#7A7A7A] leading-relaxed">
-                  The ultimate coastal highway along Cable Beach leading into national park reefs and historic caves.
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-3xl overflow-hidden border border-[#EAEDF0] shadow-sm group">
-              <div className="h-48 overflow-hidden relative">
-                <img 
-                  src="/images/cars/car-04.jpg" 
-                  alt="Downtown Nassau" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                />
-                <span className="absolute bottom-3 left-3 px-3 py-1 bg-black/70 backdrop-blur-md text-white text-[11px] font-bold rounded-lg">
-                  8 Miles • Heritage Route
-                </span>
-              </div>
-              <div className="p-6 space-y-2">
-                <h3 className="text-base font-bold text-[#201F1D]">Downtown Nassau & Fort Fincastle</h3>
-                <p className="text-xs text-[#7A7A7A] leading-relaxed">
-                  Historic colonial architecture, Queen&apos;s Staircase, local rum distilleries, and harbor viewpoints.
-                </p>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* ========================================================
-          6. INTERACTIVE FAQ ACCORDION
-      ======================================================== */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="text-center mb-12 space-y-2">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#FFA633]">
-              Got Questions?
-            </span>
-            <h2 className="text-3xl font-black text-[#201F1D] tracking-tight">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-xs sm:text-sm text-[#7A7A7A]">
-              Everything you need to know about renting a car in Nassau & the Bahamas.
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            {FAQS.map((faq, idx) => (
-              <div 
-                key={idx}
-                className="bg-[#F8F9FA] rounded-2xl border border-[#EAEDF0] overflow-hidden transition-all"
-              >
-                <button
-                  type="button"
-                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full p-5 text-left flex items-center justify-between font-bold text-sm text-[#201F1D] hover:text-[#FFA633] transition-colors"
-                >
-                  <span>{faq.q}</span>
-                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${openFaq === idx ? 'rotate-180 text-[#FFA633]' : ''}`} />
-                </button>
-                {openFaq === idx && (
-                  <div className="px-5 pb-5 text-xs text-[#6B7280] leading-relaxed animate-in fade-in">
-                    {faq.a}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-      {/* ========================================================
-          7. VIP CONCIERGE CTA BANNER
-      ======================================================== */}
-      <section className="bg-[#127384] text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-8 text-center lg:text-left">
-            
-            <div className="space-y-2 max-w-xl">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#FFA633]">
-                Need Custom Itinerary or Yacht Transfer?
-              </span>
-              <h3 className="text-2xl sm:text-3xl font-black text-white">
-                Speak with our Bahamas VIP Concierge
-              </h3>
-              <p className="text-xs sm:text-sm text-white/80">
-                Call our Nassau office at <b>+1 (242) 555-0199</b> or message us for custom multi-vehicle bookings.
+              <h3 className="text-base font-bold text-[#201F1D]">VIP Terminal Drop-off</h3>
+              <p className="text-xs text-[#878A99] leading-relaxed">
+                Step off your flight at Lynden Pindling (NAS) and your cleaned, air-conditioned vehicle is waiting directly at the VIP curb.
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-4">
-              <Link
-                href="/contact-us"
-                className="px-7 py-3.5 bg-[#FFA633] hover:bg-[#e5952e] text-white text-xs font-black rounded-xl shadow-lg transition-all"
-              >
-                Contact VIP Concierge
-              </Link>
-              <Link
-                href="/rental-grid"
-                className="px-7 py-3.5 bg-white/10 hover:bg-white/20 text-white text-xs font-black rounded-xl border border-white/20 transition-all"
-              >
-                View Full Fleet Catalog
-              </Link>
+            {/* Feature 2 */}
+            <div className="bg-[#F8F9FA] p-7 rounded-3xl border border-[#EAEDF0] hover:border-[#FFA633]/50 transition-all duration-300 hover:shadow-xl group space-y-4">
+              <div className="w-13 h-13 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-bold text-[#201F1D]">Zero Hidden Island Fees</h3>
+              <p className="text-xs text-[#878A99] leading-relaxed">
+                Transparent pricing with local Bahamas insurance, airport concession fees, and 24/7 roadside rescue clearly included upfront.
+              </p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="bg-[#F8F9FA] p-7 rounded-3xl border border-[#EAEDF0] hover:border-[#FFA633]/50 transition-all duration-300 hover:shadow-xl group space-y-4">
+              <div className="w-13 h-13 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                <HeartHandshake className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-bold text-[#201F1D]">Chauffeur & Driver Options</h3>
+              <p className="text-xs text-[#878A99] leading-relaxed">
+                Prefer to sit back? Book our licensed local chauffeurs for private island tours, dining reservations, or corporate events.
+              </p>
+            </div>
+
+            {/* Feature 4 */}
+            <div className="bg-[#F8F9FA] p-7 rounded-3xl border border-[#EAEDF0] hover:border-[#FFA633]/50 transition-all duration-300 hover:shadow-xl group space-y-4">
+              <div className="w-13 h-13 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
+                <Key className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-bold text-[#201F1D]">60-Second Digital Check-In</h3>
+              <p className="text-xs text-[#878A99] leading-relaxed">
+                No waiting in counter queues. Verify your driver&apos;s license securely on your phone and start driving immediately.
+              </p>
             </div>
 
           </div>
+
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          5. BAHAMAS SIGNATURE DRIVING DESTINATIONS
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
+          <span className="text-xs font-bold text-[#FFA633] uppercase tracking-wider">
+            Island Escapes
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-black text-[#201F1D] tracking-tight">
+            Curated Bahamian Driving Routes
+          </h2>
+          <p className="text-xs sm:text-sm text-[#878A99]">
+            Take the top down and cruise the most scenic coastal highways across New Providence Island.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          {/* Route 1: Paradise Island */}
+          <div className="relative rounded-3xl overflow-hidden group shadow-lg h-80 bg-gray-900">
+            <img 
+              src="/images/cars/car-01.jpg" 
+              alt="Paradise Island" 
+              className="w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent p-6 flex flex-col justify-end">
+              <span className="text-[10px] font-bold text-[#FFA633] uppercase tracking-wider">Scenic Coastal Drive</span>
+              <h3 className="text-lg font-bold text-white mt-1">Paradise Island & Atlantis Marina</h3>
+              <p className="text-xs text-gray-300 mt-1 line-clamp-2">
+                Cross the iconic harbor bridge in a Ferrari 458 or Camaro SS and explore world-class dining and resorts.
+              </p>
+              <div className="mt-3">
+                <Link href="/rental-grid" className="text-xs font-bold text-[#FFA633] hover:underline inline-flex items-center">
+                  <span>View Recommended Convertibles</span>
+                  <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Route 2: Cable Beach */}
+          <div className="relative rounded-3xl overflow-hidden group shadow-lg h-80 bg-gray-900">
+            <img 
+              src="/images/cars/car-02.jpg" 
+              alt="Cable Beach" 
+              className="w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent p-6 flex flex-col justify-end">
+              <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Resort Strip</span>
+              <h3 className="text-lg font-bold text-white mt-1">Cable Beach & Baha Mar Blvd</h3>
+              <p className="text-xs text-gray-300 mt-1 line-clamp-2">
+                Smooth highway cruising with sunset ocean views, luxury casinos, and beach clubs.
+              </p>
+              <div className="mt-3">
+                <Link href="/rental-grid" className="text-xs font-bold text-[#FFA633] hover:underline inline-flex items-center">
+                  <span>View Executive Sedans</span>
+                  <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Route 3: West Bay & Clifton */}
+          <div className="relative rounded-3xl overflow-hidden group shadow-lg h-80 bg-gray-900">
+            <img 
+              src="/images/cars/car-08.jpg" 
+              alt="Clifton Heritage" 
+              className="w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-75 transition-all duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent p-6 flex flex-col justify-end">
+              <span className="text-[10px] font-bold text-blue-400 uppercase tracking-wider">Coastal Heritage</span>
+              <h3 className="text-lg font-bold text-white mt-1">Clifton Heritage & Western Ocean Drive</h3>
+              <p className="text-xs text-gray-300 mt-1 line-clamp-2">
+                Unwind with lush tropical scenery and turquoise coastlines in a premium Range Rover SUV.
+              </p>
+              <div className="mt-3">
+                <Link href="/rental-grid" className="text-xs font-bold text-[#FFA633] hover:underline inline-flex items-center">
+                  <span>View Luxury SUVs</span>
+                  <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          6. STATS & LIVE ISLAND NUMBERS
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="bg-[#121316] py-16 text-white border-y border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+            
+            <div>
+              <p className="text-3xl sm:text-5xl font-black text-[#FFA633]">4,850+</p>
+              <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold mt-1">
+                Completed Rentals
+              </p>
+            </div>
+
+            <div>
+              <p className="text-3xl sm:text-5xl font-black text-white">24</p>
+              <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold mt-1">
+                Verified Supercars
+              </p>
+            </div>
+
+            <div>
+              <p className="text-3xl sm:text-5xl font-black text-[#FFA633]">15 Min</p>
+              <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold mt-1">
+                Avg. Airport Dispatch
+              </p>
+            </div>
+
+            <div>
+              <p className="text-3xl sm:text-5xl font-black text-emerald-400">4.98 ★</p>
+              <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold mt-1">
+                Customer Satisfaction
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          7. VERIFIED GUEST REVIEWS
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div className="text-center max-w-2xl mx-auto mb-14 space-y-2">
+          <span className="text-xs font-bold text-[#FFA633] uppercase tracking-wider">
+            Verified Experiences
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-black text-[#201F1D] tracking-tight">
+            Loved By Island Travelers
+          </h2>
+          <p className="text-xs sm:text-sm text-[#878A99]">
+            Read genuine feedback from guests who rented during their Bahamas vacation.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <div className="bg-white p-7 rounded-3xl border border-[#EAEDF0] shadow-sm space-y-4">
+            <div className="flex items-center text-amber-400">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-4 h-4 fill-current" />
+              ))}
+            </div>
+            <p className="text-xs text-gray-600 leading-relaxed italic">
+              &quot;Rented the Ferrari 458 for 4 days on Paradise Island. The car was delivered straight to our resort lobby within 15 minutes of landing at NAS airport. Flawless service!&quot;
+            </p>
+            <div className="flex items-center space-x-3 pt-2 border-t border-gray-100">
+              <img src="/images/team/team_ceo_male_1787225259487.jpg" alt="Renter" className="w-10 h-10 rounded-full object-cover" />
+              <div>
+                <p className="text-xs font-bold text-[#201F1D]">David Montgomery</p>
+                <p className="text-[10px] text-gray-400">New York, USA • Rented Ferrari 458</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white p-7 rounded-3xl border border-[#EAEDF0] shadow-sm space-y-4">
+            <div className="flex items-center text-amber-400">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-4 h-4 fill-current" />
+              ))}
+            </div>
+            <p className="text-xs text-gray-600 leading-relaxed italic">
+              &quot;The Camaro SS Convertible was the highlight of our Cable Beach honeymoon. Transparent pricing with zero hidden fees at return. Will definitely book again next season.&quot;
+            </p>
+            <div className="flex items-center space-x-3 pt-2 border-t border-gray-100">
+              <img src="/images/team/team_ceo_female_1787225300600.jpg" alt="Renter" className="w-10 h-10 rounded-full object-cover" />
+              <div>
+                <p className="text-xs font-bold text-[#201F1D]">Sophia & Lucas Sterling</p>
+                <p className="text-[10px] text-gray-400">London, UK • Rented Chevrolet Camaro</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white p-7 rounded-3xl border border-[#EAEDF0] shadow-sm space-y-4">
+            <div className="flex items-center text-amber-400">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-4 h-4 fill-current" />
+              ))}
+            </div>
+            <p className="text-xs text-gray-600 leading-relaxed italic">
+              &quot;Booked a Range Rover for our family trip. The digital check-in took 45 seconds on my phone and the car had complimentary bottled waters and chilled AC. 10/10.&quot;
+            </p>
+            <div className="flex items-center space-x-3 pt-2 border-t border-gray-100">
+              <img src="/images/team/team_business_head_1787225318994.jpg" alt="Renter" className="w-10 h-10 rounded-full object-cover" />
+              <div>
+                <p className="text-xs font-bold text-[#201F1D]">Carlos Hernandez</p>
+                <p className="text-[10px] text-gray-400">Miami, FL • Rented Range Rover</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          8. VIP CALL TO ACTION BANNER
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative rounded-3xl bg-gradient-to-r from-[#121316] via-[#1C1E24] to-[#121316] p-8 sm:p-14 text-white overflow-hidden shadow-2xl border border-white/10">
+          
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#FFA633]/20 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-8 space-y-3">
+              <span className="text-xs font-bold text-[#FFA633] uppercase tracking-wider">
+                Instant Bahamas Reservations
+              </span>
+              <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                Ready to Experience Your Dream Ride in the Bahamas?
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-300 max-w-xl">
+                Reserve in 60 seconds online or speak directly with our 24/7 Nassau Airport dispatch team.
+              </p>
+            </div>
+
+            <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 justify-end">
+              <Link
+                href="/rental-grid"
+                className="px-8 py-4 bg-[#FFA633] hover:bg-[#e5952e] text-white font-extrabold text-xs text-center rounded-2xl shadow-xl shadow-orange-500/25 transition-all"
+              >
+                Book Your Supercar Now
+              </Link>
+              <a
+                href="tel:+12425550199"
+                className="px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white font-bold text-xs text-center rounded-2xl border border-white/20 backdrop-blur-md transition-all flex items-center justify-center space-x-2"
+              >
+                <PhoneCall className="w-4 h-4 text-[#FFA633]" />
+                <span>Call +1 (242) 555-0199</span>
+              </a>
+            </div>
+          </div>
+
         </div>
       </section>
 
