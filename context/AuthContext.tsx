@@ -16,7 +16,7 @@ const DEMO_USERS: Record<UserRole, User> = {
   admin: {
     id: 'usr_admin_1',
     name: 'Admin Administrator',
-    email: 'admin@dreamsrent.com',
+    email: 'Admin@test.com',
     role: 'admin',
     avatar: '/images/team/team_ceo_male_1787225259487.jpg',
     phone: '+1 (242) 555-0199',

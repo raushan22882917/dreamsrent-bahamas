@@ -152,7 +152,7 @@ export function AuthGuard({ children, allowedRoles }: AuthGuardProps) {
             <div>
               <input
                 type="email"
-                placeholder="Email (e.g. admin@dreamsrent.com)"
+                placeholder="Email (e.g. Admin@test.com)"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-2.5 bg-gray-50 border border-[#EAEDF0] rounded-xl font-medium focus:ring-2 focus:ring-[#FFA633] focus:outline-none"
