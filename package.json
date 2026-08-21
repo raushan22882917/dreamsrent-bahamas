@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed": "node scripts/seed-20-records.mjs",
+    "make-admin": "node scripts/make-admin.mjs"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^6.8.1",
