@@ -6,6 +6,8 @@ import { RentalProvider } from '../context/RentalContext';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 
+import { AppShell } from '../components/layout/AppShell';
+
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -24,13 +26,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <RentalProvider>
-            <div className="flex flex-col min-h-screen">
-              <Header />
-              <main className="flex-grow">
-                {children}
-              </main>
-              <Footer />
-            </div>
+            <AppShell>
+              {children}
+            </AppShell>
           </RentalProvider>
         </AuthProvider>
       </body>

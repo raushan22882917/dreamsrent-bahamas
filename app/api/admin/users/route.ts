@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { query, initDatabase } from '../../../lib/db';
+import { query, initDatabase } from '../../../../lib/db';
 
 // GET all users with their roles
 export async function GET() {

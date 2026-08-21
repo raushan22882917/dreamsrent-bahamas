@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
+import { UserRole } from '../../types/rental';
 import { 
   Clock, 
   Calendar, 
@@ -24,10 +25,16 @@ import {
   Menu,
   X,
   ChevronRight,
+  ChevronDown,
   LogOut,
   Settings,
   DollarSign,
-  FileText
+  Globe,
+  Check,
+  Shield,
+  Briefcase,
+  User as UserIcon,
+  Navigation
 } from 'lucide-react';
 import { AuthGuard } from '../auth/AuthGuard';
 
@@ -47,9 +54,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children
 }) => {
   const pathname = usePathname();
-  const { user, logout } = useAuth();
+  const { user, login, logout, switchRole, isAuthenticated } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
 
   const sidebarSections = [
     {
@@ -91,11 +100,17 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     }
   ];
 
+  const handleQuickRoleSwitch = (role: UserRole) => {
+    switchRole(role);
+    setRoleDropdownOpen(false);
+    setUserDropdownOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col font-sans">
       
-      {/* Top Bar (Exact Match to Screenshot) */}
-      <header className="bg-white border-b border-[#EAEDF0] sticky top-0 z-40 px-4 sm:px-6 h-16 flex items-center justify-between shadow-sm">
+      {/* Sleek Dashboard Top Navbar */}
+      <header className="bg-white border-b border-[#EAEDF0] sticky top-0 z-40 px-4 sm:px-6 h-16 flex items-center justify-between shadow-xs">
         
         {/* Left: Logo & Sidebar Toggle */}
         <div className="flex items-center space-x-4">
@@ -115,49 +130,175 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               setSidebarOpen(!sidebarOpen);
               setMobileSidebarOpen(!mobileSidebarOpen);
             }}
-            className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+            className="p-2 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
             title="Toggle Sidebar"
           >
             <Menu className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Center/Left: + New Reservation Button */}
-        <div className="hidden sm:flex items-center space-x-3">
+        {/* Center Actions */}
+        <div className="hidden md:flex items-center space-x-3">
           <Link
             href="/rental-grid"
-            className="px-4 py-2 bg-[#1B1B1B] hover:bg-black text-white text-xs font-bold rounded-lg shadow-sm flex items-center space-x-1.5 transition-colors"
+            className="px-3.5 py-1.5 bg-[#1B1B1B] hover:bg-black text-white text-xs font-bold rounded-lg shadow-sm flex items-center space-x-1.5 transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>New Reservation</span>
           </Link>
+
+          <Link
+            href="/"
+            className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-lg flex items-center space-x-1.5 transition-colors"
+          >
+            <Globe className="w-3.5 h-3.5" />
+            <span>Live Site</span>
+          </Link>
         </div>
 
-        {/* Right: User Avatar & Name */}
+        {/* Right: Quick Role Switcher & User Profile */}
         <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-2.5">
-            <img 
-              src={user?.avatar || '/images/user_image.jpg'} 
-              alt={user?.name} 
-              className="w-9 h-9 rounded-full object-cover border-2 border-[#FFA633]"
-            />
-            <div className="hidden md:block text-left">
-              <span className="text-xs font-bold text-[#201F1D] block leading-none">
-                {user?.name || 'Admin Administrator'}
-              </span>
-              <span className="text-[10px] text-[#878A99] font-semibold uppercase">
-                {user?.role || 'Admin'}
-              </span>
-            </div>
+          
+          {/* Quick Role Switcher Badge */}
+          <div className="relative">
+            <button
+              onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
+              className="px-3 py-1.5 bg-orange-50 hover:bg-orange-100 border border-orange-200 text-[#FFA633] text-xs font-bold rounded-lg flex items-center space-x-1.5 transition-colors"
+            >
+              <Shield className="w-3.5 h-3.5" />
+              <span className="capitalize">{user?.role || 'Switch Role'}</span>
+              <ChevronDown className="w-3 h-3 ml-0.5" />
+            </button>
+
+            {roleDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-[#EAEDF0] py-2 z-50 animate-in fade-in">
+                <p className="px-3 py-1 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                  Switch Active Role:
+                </p>
+                {(['admin', 'vendor', 'driver', 'customer'] as UserRole[]).map((r) => (
+                  <button
+                    key={r}
+                    onClick={() => handleQuickRoleSwitch(r)}
+                    className={`w-full flex items-center justify-between px-3.5 py-2 text-xs font-semibold capitalize transition-colors ${
+                      user?.role === r 
+                        ? 'bg-orange-50 text-[#FFA633] font-bold' 
+                        : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className="flex items-center space-x-2">
+                      {r === 'admin' && <Shield className="w-3.5 h-3.5 text-[#FFA633]" />}
+                      {r === 'vendor' && <Briefcase className="w-3.5 h-3.5 text-blue-500" />}
+                      {r === 'driver' && <Navigation className="w-3.5 h-3.5 text-emerald-500" />}
+                      {r === 'customer' && <UserIcon className="w-3.5 h-3.5 text-purple-500" />}
+                      <span>{r}</span>
+                    </span>
+                    {user?.role === r && <Check className="w-3.5 h-3.5 text-[#FFA633]" />}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
+
+          {/* User Profile Dropdown */}
+          {isAuthenticated && user ? (
+            <div className="relative">
+              <button
+                onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                className="flex items-center space-x-2 p-1 rounded-xl hover:bg-gray-100 transition-colors"
+              >
+                <img 
+                  src={user.avatar || '/images/user_image.jpg'} 
+                  alt={user.name} 
+                  className="w-8 h-8 rounded-full object-cover border-2 border-[#FFA633]"
+                />
+                <div className="hidden sm:block text-left">
+                  <span className="text-xs font-bold text-[#201F1D] block leading-none">
+                    {user.name}
+                  </span>
+                  <span className="text-[10px] text-[#878A99] font-semibold uppercase">
+                    {user.role}
+                  </span>
+                </div>
+                <ChevronDown className="w-3 h-3 text-gray-400 hidden sm:block" />
+              </button>
+
+              {userDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-[#EAEDF0] py-2 z-50 animate-in fade-in">
+                  <div className="px-4 py-2 border-b border-[#EAEDF0]">
+                    <p className="text-xs font-bold text-[#201F1D] truncate">{user.name}</p>
+                    <p className="text-[10px] text-gray-400 truncate">{user.email}</p>
+                  </div>
+
+                  <div className="py-1">
+                    <Link
+                      href="/admin"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="flex items-center space-x-2.5 px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50"
+                    >
+                      <Shield className="w-4 h-4 text-[#FFA633]" />
+                      <span>Admin Overview</span>
+                    </Link>
+
+                    <Link
+                      href="/admin/cars"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="flex items-center space-x-2.5 px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50"
+                    >
+                      <Car className="w-4 h-4 text-gray-400" />
+                      <span>Manage Fleet</span>
+                    </Link>
+
+                    <Link
+                      href="/admin/bookings"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="flex items-center space-x-2.5 px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50"
+                    >
+                      <Calendar className="w-4 h-4 text-gray-400" />
+                      <span>Live Reservations</span>
+                    </Link>
+
+                    <Link
+                      href="/settings"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="flex items-center space-x-2.5 px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50"
+                    >
+                      <Settings className="w-4 h-4 text-gray-400" />
+                      <span>Settings</span>
+                    </Link>
+                  </div>
+
+                  <div className="pt-1 border-t border-[#EAEDF0]">
+                    <button
+                      onClick={() => {
+                        logout();
+                        setUserDropdownOpen(false);
+                      }}
+                      className="w-full flex items-center space-x-2.5 px-4 py-2 text-xs font-semibold text-red-600 hover:bg-red-50"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="px-4 py-2 bg-[#FFA633] hover:bg-[#e5952e] text-white text-xs font-bold rounded-xl shadow-sm transition-colors"
+            >
+              Sign In
+            </Link>
+          )}
+
         </div>
 
       </header>
 
-      {/* Main Container */}
+      {/* Main Layout Container */}
       <div className="flex-1 flex">
         
-        {/* Desktop Sidebar (Exact match to categories in screenshot) */}
+        {/* Desktop Sidebar */}
         <aside 
           className={`bg-white border-r border-[#EAEDF0] flex-shrink-0 transition-all duration-300 ${
             sidebarOpen ? 'w-64' : 'w-0 overflow-hidden border-none'
@@ -239,22 +380,25 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           </div>
         )}
 
-        {/* Main Content View */}
-        <main className="flex-1 p-6 sm:p-8 lg:p-10 max-w-7xl">
+        {/* Main Content Area */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full">
           
-          {/* Breadcrumbs & Title */}
+          {/* Breadcrumbs & Page Header */}
           <div className="mb-6">
             <h1 className="text-2xl font-black text-[#201F1D] tracking-tight">{title}</h1>
-            <div className="flex items-center space-x-2 text-xs text-[#878A99] mt-1">
+            {subtitle && (
+              <p className="text-xs text-[#878A99] mt-0.5">{subtitle}</p>
+            )}
+            <div className="flex items-center space-x-2 text-xs text-[#878A99] mt-1.5">
               {breadcrumb.map((b, i) => (
                 <React.Fragment key={b.label}>
                   {i > 0 && <ChevronRight className="w-3 h-3 text-gray-400" />}
                   {b.href ? (
-                    <Link href={b.href} className="hover:text-[#FFA633] transition-colors">
+                    <Link href={b.href} className="hover:text-[#FFA633] transition-colors font-medium">
                       {b.label}
                     </Link>
                   ) : (
-                    <span className="font-semibold text-gray-700">{b.label}</span>
+                    <span className="font-bold text-gray-700">{b.label}</span>
                   )}
                 </React.Fragment>
               ))}
